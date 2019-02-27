@@ -66,10 +66,10 @@ Plugin 'Yggdroot/indentLine'
 " flake8 構文チェック<F7>割当 apt-get install flake8
 Plugin 'nvie/vim-flake8'
 " Python補完 apt-get install python-jedi
-" Plugin 'davidhalter/jedi-vim'
+Plugin 'davidhalter/jedi-vim'
 " pythonのrename用のマッピングがquickrunとかぶるため回避させる
-" let g:jedi#rename_command = ""
-" let g:jedi#documentation_command= "z"
+let g:jedi#rename_command = ""
+let g:jedi#documentation_command= "z"
 autocmd FileType python setlocal completeopt-=preview " ポップアップを表示しない
 " autopep 
 let g:autopep8_diff_type='vertical'
@@ -106,6 +106,26 @@ nnoremap <S-f> :call Autopep8()<CR>
 " 自動保存
 " autocmd BufWrite *.{py} :call Autopep8()
 
+" lint tools for cpp, python, js
+" pip install cpplint
+" 
+Plugin 'w0rp/ale'
+    let g:ale_echo_msg_error_str = 'E'
+    let g:ale_echo_msg_warning_str = 'W'
+    let g:ale_sign_error = 'E'
+    let g:ale_sign_warning = 'W'
+    let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+    let g:ale_statusline_format = ['x %d', '⚠ %d', 'ok']
+    let g:ale_lint_on_text_change = 0
+    let g:ale_linters = {
+        \ 'python' : ['flake8'],
+        \ 'cpp' : ['cpplint'],
+	    \ 'javascript': ['eslint'],
+        \ 'markdown': [
+        \   {buffer, lines -> {'command': 'textlint -c ~/.config/textlintrc -o /dev/null --fix --no-color --quiet %t', 'read_temporary_file': 1}}
+        \   ],
+        \ }
+
 " Tree構造を表示するC-e で表示 :help NERDtree参照
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
@@ -128,18 +148,30 @@ let g:EasyMotion_leader_key="'"
 let g:EasyMotion_grouping=1
 
 " インターフェイス変更
-Plugin 'vim-airline/vim-airline'
-" Powerline系フォントを利用する
-let g:airline_powerline_fonts = 1
+" airlineが重いのでlightlineを使う
+Plugin 'itchyny/lightline.vim'
+let g:lightline = {
+\'active': {
+\  'left': [
+\    ['mode', 'paste'],
+\    ['readonly', 'filename', 'modified'],
+\    [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ] ],
+\ },
+\ }
 
-" タブバーのカスタマイズを有効にする
-let g:airline#extensions#tabline#enabled = 1
-
-" タブバーの右領域を非表示にする
-let g:airline#extensions#tabline#show_splits = 0
-let g:airline#extensions#tabline#show_tab_type = 0
-let g:airline#extensions#tabline#show_close_button = 0
-
+Plugin 'maximbaz/lightline-ale'
+let g:lightline.component_expand = {
+      \  'linter_checking': 'lightline#ale#checking',
+      \  'linter_warnings': 'lightline#ale#warnings',
+      \  'linter_errors': 'lightline#ale#errors',
+      \  'linter_ok': 'lightline#ale#ok',
+      \ }
+let g:lightline.component_type = {
+      \     'linter_checking': 'left',
+      \     'linter_warnings': 'warning',
+      \     'linter_errors': 'error',
+      \     'linter_ok': 'left',
+      \ }
 "
 Plugin 'thinca/vim-quickrun'
 " エディタの分割方向を設定する
@@ -341,7 +373,7 @@ Plugin 'tpope/vim-fugitive'
 set diffopt+=vertical
 " Statuslineの設定
 set laststatus=2
-set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ \[ENC=%{&fileencoding}]%P
+set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ \[ENC=%{&fileencoding}]%{ALEGetStatusLine()}%P
 
 " For Markdown
 Plugin 'godlygeek/tabular'
@@ -384,9 +416,10 @@ filetype plugin indent on    " required
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
 
-Plugin 'mattn/webapi-vim'
-Plugin 'tsuyoshiwada/slack-memo-vim', {'depends': 'mattn/webapi-vim'}
+" Plugin 'mattn/webapi-vim'
+" Plugin 'tsuyoshiwada/slack-memo-vim', {'depends': 'mattn/webapi-vim'}
 " ~/.vimrc.localにTokenを貼り付けること
+
 " release autogroup in MyAutoCmd
  augroup MyAutoCmd
    autocmd!
@@ -537,6 +570,7 @@ nnoremap <silent> [toggle]w :setl wrap!<CR>:setl wrap?<CR>
 nnoremap <Leader>o :e<CR>
 "ファイル保存
 nnoremap <Leader>w :w<CR>
+nnoremap <Leader>q :q<CR>
 
 " make, grep などのコマンド後に自動的にQuickFixを開く
 autocmd MyAutoCmd QuickfixCmdPost make,grep,grepadd,vimgrep copen
@@ -608,7 +642,7 @@ endif
 " autocmd BufWrite *.{h} :CPPCodeCleanup
 
 " vim内のタブ操作
-nnoremap <Leader>b :bp<CR>
+nnoremap <Leader>m :bp<CR>
 nnoremap <Leader>n :bn<CR>
 
 "filetype plugin indent on
