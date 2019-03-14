@@ -1,4 +1,4 @@
-snippet #ini "initialize"
+snippet ini "initialize"
     #!/usr/bin/env python
 	# -*- coding: utf-8 -*-
 endsnippet
@@ -247,3 +247,31 @@ snippet ros_server
 		start_server()
 endsnippet
 
+snippet ros_sub_class
+class ${1:ClassName}Subscriber(${2:object}):
+    """
+    ${3:docstring for $1}
+    Subscribe $1
+    return ${4: return}
+    """
+
+    def __init__(self):
+    """ """"
+        self.$4=None
+        rospy.Subscriber("${5:topic_name}", ${6:message},
+                         self._$5_callback,
+                         queue_size=1)
+        rospy.loginfo('Init $5 subscriber')
+
+    def _$5_callback(self, msg):
+    """
+    処理を書く
+    """
+    @property  # Read only
+    def ${7:property}(self):
+    """
+    返す変数を定義
+    """
+        return self.$4
+
+endsnippet

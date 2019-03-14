@@ -39,8 +39,8 @@ endif
 create_tags: $(seq)
 
 $(seq):
-	mkdir -p $(tags_save_dir)
-	ctags -R \
+	@mkdir -p $(tags_save_dir)
+	@ctags -R \
       --languages=$(word $@,$(lang)) \
       --langmap=$(word $@,$(lang)):$(word $@,$(ext)) \
       -f $(tags_save_dir)/$(word $@,$(lower_lang))_tags $(tags_target_dir)

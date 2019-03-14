@@ -17,22 +17,23 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
+" vim-surround
+Plugin 'tpope/vim-surround'
 " The following are examples of different formats supported.
 " Keep Plugin commands between vundle#begin/end.
 
 " Track the engine.
 Plugin 'SirVer/ultisnips'
 
-" vim-surround
-Plugin 'tpope/vim-surround'
 
 " Snippets are separated from the engine. Add this if you want them:
 Plugin 'honza/vim-snippets'
 " https://github.com/SirVer/ultisnips/issues/519
-let g:UltiSnipsExpandTrigger="<c-t>"
-let g:UltiSnipsJumpForwardTrigger="<c-t>"
-let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 let g:UltiSnipsSnippetsDir='~/.vim/snipets'
+let g:UltiSnipsEditSplit="vertical"
 let g:ulti_expand_or_jump_res = 0
 function! CleverTab()"{{{
     call UltiSnips#ExpandSnippetOrJump()
@@ -48,6 +49,7 @@ function! CleverTab()"{{{
 endfunction"}}}
 
 inoremap <silent> <tab> <c-r>=CleverTab()<cr>
+snoremap <silent> <tab> <esc>:call UltiSnips#ExpandSnippetOrJump()<cr>
 " inoremap <silent> <tab> <c-r>=g:UltiSnips_Complete()<cr>
 " snoremap <silent> <tab> <esc>:call UltiSnips#ExpandSnippetOrJump()<cr>
 
@@ -57,57 +59,21 @@ inoremap <silent> <tab> <c-r>=CleverTab()<cr>
 " let g:UltiSnipsJumpBackwardTrigger="<S-tab>"
 let g:UltiSnipsSnippetDirectories =["snipet","UltiSnips"]
 " inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<C-R>=UltiSnips#ExpandSnippet()"
-" If you want :UltiSnipsEdit to split your window.
-let g:UltiSnipsEditSplit="vertical"
 set runtimepath+=~/.vim/snipets/
 " ----For Python editor----
 " add indent line
 Plugin 'Yggdroot/indentLine'
-" flake8 構文チェック<F7>割当 apt-get install flake8
-Plugin 'nvie/vim-flake8'
 " Python補完 apt-get install python-jedi
 Plugin 'davidhalter/jedi-vim'
 " pythonのrename用のマッピングがquickrunとかぶるため回避させる
-let g:jedi#rename_command = ""
+let g:jedi#rename_command = "<leader>t"
+let g:jedi#usages_command = "<leader>h"
 let g:jedi#documentation_command= "z"
 autocmd FileType python setlocal completeopt-=preview " ポップアップを表示しない
 " autopep 
-let g:autopep8_diff_type='vertical'
-let g:autopep8_disable_show_diff=1
-" original http://stackoverflow.com/questions/12374200/using-uncrustify-with-vim/15513829#15513829
-function! Preserve(command)
-    " Save the last search.
-    let search = @/
-    " Save the current cursor position.
-    let cursor_position = getpos('.')
-    " Save the current window position.
-    normal! H
-    let window_position = getpos('.')
-    call setpos('.', cursor_position)
-    " Execute the command.
-    execute a:command
-    " Restore the last search.
-    let @/ = search
-    " Restore the previous window position.
-    call setpos('.', window_position)
-    normal! zt
-    " Restore the previous cursor position.
-    call setpos('.', cursor_position)
-endfunction
-
-function! Autopep8()
-    "--ignote=E501: 一行の長さの補正を無視"
-    call Preserve(':silent %!autopep8 --ignore=E501 -')
-endfunction
-
-" Shift + F でautopep自動修正
-nnoremap <S-f> :call Autopep8()<CR>
-
-" 自動保存
-" autocmd BufWrite *.{py} :call Autopep8()
-
 " lint tools for cpp, python, js
 " pip install cpplint
+" pip install autopep8
 " 
 Plugin 'w0rp/ale'
     let g:ale_echo_msg_error_str = 'E'
@@ -117,15 +83,24 @@ Plugin 'w0rp/ale'
     let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
     let g:ale_statusline_format = ['x %d', '⚠ %d', 'ok']
     let g:ale_lint_on_text_change = 0
+    let g:ale_lint_on_enter = 1
+    let g:ale_cpp_cpplint_options= '--quiet --filter=-whitespace/tab,-whitespace/braces'
+    let g:ale_python_autopep8_options= '-a -a --max-line-length=100'
     let g:ale_linters = {
-        \ 'python' : ['flake8'],
-        \ 'cpp' : ['cpplint'],
-	    \ 'javascript': ['eslint'],
-        \ 'markdown': [
-        \   {buffer, lines -> {'command': 'textlint -c ~/.config/textlintrc -o /dev/null --fix --no-color --quiet %t', 'read_temporary_file': 1}}
-        \   ],
-        \ }
-
+       \ 'python' : ['flake8'],
+       \ 'cpp' : ['cpplint'],
+       \ 'xml' : ['xmllint'],
+       \ 'javascript': ['eslint'],
+       \ }
+    let g:ale_fixers= {
+       \ 'javascript': ['prettier'],
+       \ 'xml' : ['xmllint'],
+       \ 'python' : ['autopep8'],
+       \ 'markdown': [
+       \   {buffer, lines -> {'command': 'textlint -c ~/.config/textlintrc -o /dev/null --fix --no-color --quiet %t', 'read_temporary_file': 1}}
+       \   ],
+	   \}
+	let g:ale_fix_on_save = 1
 " Tree構造を表示するC-e で表示 :help NERDtree参照
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
@@ -192,7 +167,7 @@ let g:ctrlp_lazy_update = 200
 " キャッシュを保持するとgit checkout時にファイル差分があるのでキャッシュクリア
 " キャッシュを保持しなくてもagがあれば早い
 if executable('ag')
-		" sudo apt install silversearcher-ag
+  " sudo apt install silversearcher-ag
   let g:ctrlp_use_caching=0
   let g:ctrlp_user_command='ag %s -i --nocolor --nogroup -g ""'
 endif
@@ -358,14 +333,19 @@ vnoremap <silent><Space>s :OverCommandLine<CR>s//g<Left><Left>
 nnoremap sub :OverCommandLine<CR>%s/<C-r><C-w>//g<Left><Left>
 
 " Plugin for ROS 
-Plugin 'taketwo/vim-ros'
-let g:ros_make = 'current'
-let g:ros_build_system = 'catkin-tools'
-let g:ros_catkin_make_options = ''
+" Plugin 'taketwo/vim-ros'
+" let g:ros_make = 'current'
+" let g:ros_build_system = 'catkin-tools'
+" let g:ros_catkin_make_options = ''
 " command list
 "   - :A 現在編集してるC++のコードに対応するソースコードorヘッダファイル を自動検索
 "   - :roscd
 "   - :rosed
+" rosのディレクトリをPathに追加
+set path+=/opt/ros/kinetic/share/**
+set path+=~/ros/src/**
+" gfでlaunchファイル内で検索するときは先頭の/を除く
+autocmd FileType xml :setlocal includeexpr=substitute(v:fname,'^\\/','','')
 
 " Plugin for git 
 Plugin 'tpope/vim-fugitive'
@@ -384,7 +364,7 @@ let g:vim_markdown_conceal = 0
 " Plugin 'gabrielelana/vim-markdown'
 Plugin 'kannokanno/previm'
 let g:vim_markdown_folding_disabled=1
-let g:previm_open_cmd = 'open -a google-chrome'
+let g:previm_open_cmd = ''
 " nnoremap <silent> <C-v> :PrevimOpen<CR> 
 au BufRead,BufNewFile *.md set filetype=markdown
 " plugin from http://vim-scripts.org/vim/scripts.html
@@ -450,7 +430,11 @@ endif
 set nocompatible
 
 "タブ幅の設定
+" TABきーを御した際にタブ文字の代わりにスペース
 set tabstop=4
+set shiftwidth=4
+set expandtab
+set autoindent
 
 "行番号表示
 set number
@@ -570,7 +554,7 @@ nnoremap <silent> [toggle]w :setl wrap!<CR>:setl wrap?<CR>
 nnoremap <Leader>o :e<CR>
 "ファイル保存
 nnoremap <Leader>w :w<CR>
-nnoremap <Leader>q :q<CR>
+" nnoremap <Leader>q :q<CR>
 
 " make, grep などのコマンド後に自動的にQuickFixを開く
 autocmd MyAutoCmd QuickfixCmdPost make,grep,grepadd,vimgrep copen
