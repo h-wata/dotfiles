@@ -84,7 +84,8 @@ Plugin 'w0rp/ale'
     let g:ale_statusline_format = ['x %d', '⚠ %d', 'ok']
     let g:ale_lint_on_text_change = 0
     let g:ale_lint_on_enter = 1
-    let g:ale_cpp_cpplint_options= '--quiet --filter=-whitespace/tab,-whitespace/braces'
+    let g:ale_cpp_cpplint_options= '--quiet --filter=-whitespace/tab,-whitespace/braces,-legal/copyright'
+    let g:ale_c_clangformat_options= '-style="{BasedOnStyle: Google, IndentWidth: 4, Standard: Cpp11}"'
     let g:ale_python_autopep8_options= '-a -a --max-line-length=100'
     let g:ale_linters = {
        \ 'python' : ['flake8'],
@@ -94,13 +95,13 @@ Plugin 'w0rp/ale'
        \ }
     let g:ale_fixers= {
        \ 'javascript': ['prettier'],
-       \ 'xml' : ['xmllint'],
        \ 'python' : ['autopep8'],
+       \ 'cpp' : ['clang-format'],
        \ 'markdown': [
        \   {buffer, lines -> {'command': 'textlint -c ~/.config/textlintrc -o /dev/null --fix --no-color --quiet %t', 'read_temporary_file': 1}}
        \   ],
 	   \}
-	let g:ale_fix_on_save = 1
+	let g:ale_fix_on_save = 0
 " Tree構造を表示するC-e で表示 :help NERDtree参照
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
@@ -354,6 +355,9 @@ set diffopt+=vertical
 " Statuslineの設定
 set laststatus=2
 set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ \[ENC=%{&fileencoding}]%{ALEGetStatusLine()}%P
+nnoremap <leader>gd :Gvdiff<CR>
+nnoremap gdh :diffget //2<CR>
+nnoremap gdl :diffget //3<CR>
 
 " For Markdown
 Plugin 'godlygeek/tabular'
