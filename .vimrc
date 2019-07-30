@@ -23,44 +23,7 @@ Plugin 'tpope/vim-surround'
 " The following are examples of different formats supported.
 " Keep Plugin commands between vundle#begin/end.
 
-" Track the engine.
-Plugin 'SirVer/ultisnips'
 
-
-" Snippets are separated from the engine. Add this if you want them:
-Plugin 'honza/vim-snippets'
-" https://github.com/SirVer/ultisnips/issues/519
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-let g:UltiSnipsSnippetsDir='~/.vim/snipets'
-let g:UltiSnipsEditSplit="vertical"
-let g:ulti_expand_or_jump_res = 0
-function! CleverTab()"{{{
-    call UltiSnips#ExpandSnippetOrJump()
-    if g:ulti_expand_or_jump_res
-        return ""
-    else
-        if pumvisible()
-            return "\<c-n>"
-        else
-            return neocomplete#start_manual_complete()
-        endif
-    endif
-endfunction"}}}
-
-inoremap <silent> <tab> <c-r>=CleverTab()<cr>
-snoremap <silent> <tab> <esc>:call UltiSnips#ExpandSnippetOrJump()<cr>
-" inoremap <silent> <tab> <c-r>=g:UltiSnips_Complete()<cr>
-" snoremap <silent> <tab> <esc>:call UltiSnips#ExpandSnippetOrJump()<cr>
-
-" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-" let g:UltiSnipsExpandTrigger="<TAB>"
-" let g:UltiSnipsJumpForwardTrigger="<tab>"
-" let g:UltiSnipsJumpBackwardTrigger="<S-tab>"
-let g:UltiSnipsSnippetDirectories =["snipet","UltiSnips"]
-" inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<C-R>=UltiSnips#ExpandSnippet()"
-set runtimepath+=~/.vim/snipets/
 " ----For Python editor----
 " add indent line
 Plugin 'Yggdroot/indentLine'
@@ -197,86 +160,17 @@ vmap <Leader>c <Plug>(caw:hatpos:toggle)
 " ---- For C++ ----
 " 関数前で:Doxとうつと自動でコメント挿入
 Plugin 'DoxygenToolkit.vim'
-" 自動補完
-" Plugin 'Shougo/neocomplete.vim'
-" " C++用自動補完
-" " Plugin 'justmao945/vim-clang'
-"
-" " neocomplete and vim-clang setting >>>
-" " 'Shougo/neocomplete.vim' {{{
-" let g:neocomplete#enable_at_startup = 1
-"
-" if !exists('g:neocomplete#force_omni_input_patterns')
-"   let g:neocomplete#force_omni_input_patterns = {} 
-" endif
-" let g:neocomplete#force_overwrite_completefunc = 1
-" let g:neocomplete#force_omni_input_patterns.c =
-"      \ '[^.[:digit:] *\t]\%(\.\|->\)\w*'
-" let g:neocomplete#force_omni_input_patterns.cpp =
-"      \ '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
-" let g:neocomplete#enable_smart_case = 1
-" " 3文字以上の単語に対して補完を有効にする
-" let g:neocomplete#min_keyword_length = 3
-" " 区切り文字まで補完する
-" let g:neocomplete#enable_auto_delimiter = 1
-" " 1文字目の入力から補完のポップアップを表示
-" let g:neocomplete#auto_completion_start_length = 1
-" " バックスペースで補完のポップアップを閉じる
-" inoremap <expr><BS> neocomplete#smart_close_popup()."<C-h>"
-"
-" }}}
-"
-" 'justmao945/vim-clang' {{{
 
-" " disable auto completion for vim-clang
-" let g:clang_auto = 0
-" " default 'longest' can not work with neocomplete
-" let g:clang_c_completeopt   = 'menuone'
-" let g:clang_cpp_completeopt = 'menuone'
-"
-" function! s:get_latest_clang(search_path)
-"     let l:filelist = split(globpath(a:search_path, 'clang-*'), '\n')
-"     let l:clang_exec_list = []
-"     for l:file in l:filelist
-"         if l:file =~ '^.*clang-\d\.\d$'
-"             call add(l:clang_exec_list, l:file)
-"         endif
-"     endfor
-"     if len(l:clang_exec_list)
-"         return reverse(l:clang_exec_list)[0]
-"     else
-"         return 'clang'
-"     endif
-" endfunction
-"
-" function! s:get_latest_clang_format(search_path)
-"     let l:filelist = split(globpath(a:search_path, 'clang-format-*'), '\n')
-"     let l:clang_exec_list = []
-"     for l:file in l:filelist
-"         if l:file =~ '^.*clang-format-\d\.\d$'
-"             call add(l:clang_exec_list, l:file)
-"         endif
-"     endfor
-"     if len(l:clang_exec_list)
-"         return reverse(l:clang_exec_list)[0]
-"     else
-"         return 'clang-format'
-"     endif
-" endfunction
-"
-" let g:clang_exec = s:get_latest_clang('/usr/bin')
-" let g:clang_format_exec = s:get_latest_clang_format('/usr/bin')
-"
-" let g:clang_c_options = '-std=c11'
-" let g:clang_cpp_options = '-std=c++11 -stdlib=libc++'
-
-
-" }}}
 " <<<neocomplete and vim-clang setting
 " vim-lsp setting
 Plugin 'prabirshrestha/async.vim'
 Plugin 'prabirshrestha/asyncomplete.vim'
+Plugin 'prabirshrestha/asyncomplete-lsp.vim'
+Plugin 'prabirshrestha/asyncomplete-neosnippet.vim'
+Plugin 'Shougo/neosnippet.vim'
 Plugin 'prabirshrestha/vim-lsp'
+Plugin 'thomasfaingnaert/vim-lsp-snippets'
+Plugin 'thomasfaingnaert/vim-lsp-ultisnips'
 Plugin 'pdavydov108/vim-lsp-cquery'
 autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>fv :LspCqueryDerived<CR>
 autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>fc :LspCqueryCallers<CR>
@@ -285,49 +179,105 @@ autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>fi :LspCqueryVars<CR>
 
 if executable('pyls')
     " pip install python-language-server
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'pyls',
-        \ 'cmd': {server_info->['pyls']},
-        \ 'whitelist': ['python'],
-        \ })
-endif
-if executable('clangd')
-    au User lsp_setup call lsp#register_server({
-       \ 'name': 'clangd',
-       \ 'cmd': {server_info->['clangd']},
-       \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
+  augroup vim_lsp_py
+    autocmd!
+    autocmd User lsp_setup call lsp#register_server({
+       \ 'name': 'pyls',
+       \ 'cmd': {server_info->['pyls']},
+       \ 'whitelist': ['python'],
        \ })
+    autocmd Filetype py setlocal omnifunc=lsp#complete
+  augroup end
 endif
-if executable('cquery')
-   au User lsp_setup call lsp#register_server({
-      \ 'name': 'cquery',
-      \ 'cmd': {server_info->['cquery']},
-      \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
-      \ 'initialization_options': { 'cacheDirectory': '/tmp/cquery/cache' },
-      \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
-      \ })
+
+" clangd, cqueryはプロジェクトのcompile_commands.jsonを読んで補完を行うので
+" cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ONのオプションでビルドし、
+" project root dirにjsonを貼る必要がある
+if executable('clangd')
+  augroup vim_lsp_cpp
+    autocmd!
+    autocmd User lsp_setup call lsp#register_server({
+    \ 'name': 'clangd',
+    \ 'cmd': {server_info->['clangd']},
+    \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
+    \ })
+    autocmd Filetype c,cpp,objc,objcpp,cc setlocal omnifunc=lsp#complete
+  augroup end
 endif
+set completeopt+=menuone
+" if executable('cquery')
+"    au User lsp_setup call lsp#register_server({
+"    \ 'name': 'cquery',
+"    \ 'cmd': {server_info->['cquery']},
+"    \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
+"    \ 'initialization_options': { 'cacheDirectory': '/tmp/cquery/cache' },
+"    \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
+"    \ })
+" endif
+au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#neosnippet#get_source_options({
+   \ 'name': 'neosnippet',
+   \ 'whitelist': ['*'],
+   \ 'completor': function('asyncomplete#sources#neosnippet#completor'),
+   \ }))"
+
 let g:lsp_signs_enabled = 1         " enable signs
-let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
+let g:lsp_diagnostics_echo_cursor = 0 " enable echo under cursor when in normal mode
 
 let g:lsp_signs_error = {'text': '✗'}
 let g:lsp_signs_warning = {'text': '‼'}
 
-let g:asyncomplete_completion_delay=10
+let g:asyncomplete_completion_delay=40
 
 autocmd FileType typescript setlocal omnifunc=lsp#complete
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
 
+" for debug
+let g:lsp_log_verbose = 1
+let g:lsp_log_file = expand('~/vim-lsp.log')
+let g:asyncomplete_log_file = expand('~/asyncomplete.log')
+
+Plugin 'Shougo/deoplete.nvim'
+if !has('nvim')
+  Plugin 'roxma/nvim-yarp'
+  Plugin 'roxma/vim-hug-neovim-rpc'
+endif
+
+Plugin 'Shougo/neosnippet-snippets'
+
+" Enable snipMate compatibility feature.
+let g:neosnippet#enable_snipmate_compatibility = 1
+
+" Tell Neosnippet about the other snippets
+let g:neosnippet#snippets_directory='~/.vim/snippets/snipet'
+
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+" SuperTab like snippets behavior.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+"imap <expr><TAB>
+" \ pumvisible() ? "\<C-n>" :
+" \ neosnippet#expandable_or_jumpable() ?
+" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+" For conceal markers.
+if has('conceal')
+  set conceallevel=2 concealcursor=niv
+endif
+
 " ctags setting>>>
 " ファイルタイプ毎 & gitリポジトリ毎にtagsの読み込みpathを変える
 function! ReadTags(type)
-   if a:type == 'cpp'
-      let type = 'c++'
-	 else
-		  let type = a:type
-   endif
+if a:type == 'cpp'
+    let type = 'c++'
+    else
+        let type = a:type
+endif
 
     try
         execute "set tags=".$HOME."/work/dotfiles/tags_files/".
@@ -664,19 +614,6 @@ if has('mouse')
         set ttymouse=xterm2
     endif
 endif
-" clang-format必須 C++整形
-" function! CPPCodeCleanup()
-"   " echo "Cleanup cpp code"
-"   let l:lines="all"
-"   let g:clang_format_fallback_style = 'Google'
-"   :pyf /usr/local/share/clang/clang-format.py
-" endfunction
-" command! CPPCodeCleanup call CPPCodeCleanup()
-"
-" autocmd BufWrite *.{cpp} :CPPCodeCleanup
-" autocmd BufWrite *.{hpp} :CPPCodeCleanup
-" autocmd BufWrite *.{c} :CPPCodeCleanup
-" autocmd BufWrite *.{h} :CPPCodeCleanup
 
 " vim内のタブ操作
 nnoremap <Leader>m :bp<CR>
@@ -685,9 +622,9 @@ nnoremap <Leader>n :bn<CR>
 "filetype plugin indent on
 "
 " 入力モードでのカーソル移動
-inoremap <C-d> <BS>
-inoremap <C-j> <Down>
-inoremap <C-k> <Up>
+" inoremap <C-> <BS>
+" inoremap <C-j> <Down>
+" inoremap <C-k> <Up>
 " inoremap <C-h> <Left>
 " inoremap <C-l> <Right>
 inoremap っｊ <Esc>
