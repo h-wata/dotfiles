@@ -49,7 +49,8 @@ Plugin 'w0rp/ale'
     let g:ale_lint_on_text_change = 0
     let g:ale_lint_on_enter = 1
     let g:ale_cpp_cpplint_options= '--quiet --filter=-whitespace/tab,-whitespace/braces,-legal/copyright'
-    let g:ale_c_clangformat_options= '-style="{BasedOnStyle: Google, IndentWidth: 4, Standard: Cpp11}"'
+    " let g:ale_c_clangformat_options= '-style="{BasedOnStyle: Google, IndentWidth: 4, Standard: Cpp11}"'
+    let g:ale_c_clangformat_options= '-style=file'
     let g:ale_python_autopep8_options= '-a -a --max-line-length=100'
     let g:ale_linters = {
        \ 'python' : ['flake8'],
