@@ -48,8 +48,8 @@ Plugin 'w0rp/ale'
     let g:ale_statusline_format = ['x %d', '⚠ %d', 'ok']
     let g:ale_lint_on_text_change = 0
     let g:ale_lint_on_enter = 1
-    let g:ale_cpp_cpplint_options= '--quiet --filter=-whitespace/tab,-whitespace/braces,-legal/copyright'
-    " let g:ale_c_clangformat_options= '-style="{BasedOnStyle: Google, IndentWidth: 4, Standard: Cpp11}"'
+    let g:ale_cpp_cpplint_options= '--linelength=150 --quiet --filter=-whitespace/braces,-whitespace/tab'
+    " let g:ale_cpp_cpplint_options= '--linelength=150 --quiet --filter=-whitespace/tab,-whitespace/braces,-legal/copyright'
     let g:ale_c_clangformat_options= '-style=file'
     let g:ale_python_autopep8_options= '-a -a --max-line-length=100'
     let g:ale_linters = {
@@ -364,6 +364,7 @@ Plugin 'godlygeek/tabular'
 
 Plugin 'plasticboy/vim-markdown'
 let g:vim_markdown_conceal = 0
+let g:vim_markdown_conceal_code_blocks = 0
 
 " Plugin 'gabrielelana/vim-markdown'
 Plugin 'kannokanno/previm'
