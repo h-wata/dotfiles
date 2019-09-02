@@ -49,6 +49,7 @@ Plugin 'w0rp/ale'
     let g:ale_lint_on_text_change = 0
     let g:ale_lint_on_enter = 1
     let g:ale_cpp_cpplint_options= '--linelength=150 --quiet --filter=-whitespace/braces,-whitespace/tab'
+    let g:ale_python_flake8_options= '--max-line-length=100'
     " let g:ale_cpp_cpplint_options= '--linelength=150 --quiet --filter=-whitespace/tab,-whitespace/braces,-legal/copyright'
     let g:ale_c_clangformat_options= '-style=file'
     let g:ale_python_autopep8_options= '-a -a --max-line-length=100'
@@ -200,7 +201,7 @@ if executable('clangd')
     autocmd User lsp_setup call lsp#register_server({
     \ 'name': 'clangd',
     \ 'cmd': {server_info->['clangd']},
-    \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
+    \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp']
     \ })
     autocmd Filetype c,cpp,objc,objcpp,cc setlocal omnifunc=lsp#complete
   augroup end
