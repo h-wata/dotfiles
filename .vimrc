@@ -97,8 +97,11 @@ let g:lightline = {
 \'active': {
 \  'left': [
 \    ['mode', 'paste'],
-\    ['readonly', 'filename', 'modified'],
+\    ['gitbranch', 'readonly', 'filename', 'modified'],
 \    [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ] ],
+\ },
+\ 'component_function':{
+\   'gitbranch': 'fugitive#head'
 \ },
 \ }
 
@@ -355,7 +358,7 @@ Plugin 'tpope/vim-fugitive'
 set diffopt+=vertical
 " Statuslineの設定
 set laststatus=2
-set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ \[ENC=%{&fileencoding}]%{ALEGetStatusLine()}%P
+" set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ \[ENC=%{&fileencoding}]%{ALEGetStatusLine()}%P
 nnoremap <leader>gd :Gvdiff<CR>
 nnoremap gdh :diffget //2<CR>
 nnoremap gdl :diffget //3<CR>
