@@ -1,7 +1,8 @@
 set encoding=utf-8
 set fileformats=unix,dos,mac
 set fileencodings=utf-8,sjis,euc-jp,iso-2022-jp
-
+set relativenumber
+set cursorline
 set nocompatible              " be iMproved, required
 set wildmenu " コマンドモードの補完
 filetype off                  " required
