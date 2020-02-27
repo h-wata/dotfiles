@@ -13,6 +13,7 @@ let g:termdebug_wide= 163
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
+set rtp+=~/.vim/runtime/
 call vundle#begin()
 " alternatively, pass a path where Vundle should install plugins
 "call vundle#begin('~/some/path/here')
@@ -28,12 +29,14 @@ Plugin 'tpope/vim-surround'
 " ----For Python editor----
 " add indent line
 Plugin 'Yggdroot/indentLine'
+let g:indentLine_char = '┆'
+" let g:indentLine_conceallevel = 2
 " Python補完 apt-get install python-jedi
 Plugin 'davidhalter/jedi-vim'
 " pythonのrename用のマッピングがquickrunとかぶるため回避させる
 let g:jedi#rename_command = "<leader>t"
 let g:jedi#usages_command = "<leader>h"
-let g:jedi#documentation_command= "z"
+let g:jedi#documentation_command= "<leader>z"
 autocmd FileType python setlocal completeopt-=preview " ポップアップを表示しない
 " autopep 
 " lint tools for cpp, python, js
@@ -59,6 +62,7 @@ Plugin 'w0rp/ale'
        \ 'cpp' : ['cpplint'],
        \ 'xml' : ['xmllint'],
        \ 'javascript': ['eslint'],
+       \ 'sh': ['shellcheck'],
        \ }
     let g:ale_fixers= {
        \ 'javascript': ['prettier'],
@@ -284,7 +288,6 @@ if a:type == 'cpp'
     else
         let type = a:type
 endif
-
     try
         execute "set tags=".$HOME."/work/dotfiles/tags_files/".
               \ system("cd " . expand('%:p:h') . "; basename `git rev-parse --show-toplevel` | tr -d '\n'").
@@ -508,7 +511,7 @@ set novisualbell
 " デフォルト不可視文字は美しくないのでUnicodeで綺麗に
 
 "set listchars=tab:>-,trail:-,extends:>>,precedes:<<,nbsp:%,eol:~
-set listchars=tab:>-,nbsp:%,eol:~,trail:-
+set listchars=tab:>-,nbsp:%,eol:~,trail:-,space:.
 "マクロ及びキー設定
  " 入力モード中に素早くjjと入力した場合はESCとみなす
 inoremap jj <Esc>
