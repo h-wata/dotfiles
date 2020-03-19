@@ -7,6 +7,7 @@ sudo apt-get -y install flake8
 sudo apt-get -y install clang-format-3.6
 sudo apt-get -y install python-jedi
 sudo apt-get -y install python-pip
+sudo apt-get -y install ctags-exuberant
 pip install autopep8
 pip install cpplint
 
