@@ -151,6 +151,15 @@ endif
 " 検索モードを開く
 nmap <Leader>f :CtrlP<CR>
 
+" fzf vim setting
+Plugin 'junegunn/fzf'
+Plugin 'junegunn/fzf.vim'
+nnoremap <silent> ,f :GFiles<CR>
+nnoremap <silent> ,F :GFiles?<CR>
+nnoremap <silent> ,b :Buffers<CR>
+nnoremap <silent> ,l :BLines<CR>
+nnoremap <silent> ,h :History<CR>
+nnoremap <silent> ,m :Mark<CR>
 " url開く
 Plugin 'tyru/open-browser.vim'
 " カーソル下のURLや単語をブラウザで開く
