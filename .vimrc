@@ -78,6 +78,10 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'airblade/vim-gitgutter'
+nmap ]h <Plug>(GitGutterNextHunk )
+nmap [h <Plug>(GitGutterPrevHunk)
+nmap <Leader>ha <Plug>(GitGutterStageHunk)
+nmap <Leader>hu <Plug>(GitGutterRevertHunk)
 " 隠しファイルを表示する
 let NERDTreeShowHidden = 1
 nnoremap <silent><C-e> :NERDTreeFocusToggle<CR>
@@ -185,9 +189,11 @@ Plugin 'DoxygenToolkit.vim'
 Plugin 'prabirshrestha/async.vim'
 Plugin 'prabirshrestha/asyncomplete.vim'
 Plugin 'prabirshrestha/asyncomplete-lsp.vim'
+Plugin 'prabirshrestha/asyncomplete-buffer.vim'
 Plugin 'prabirshrestha/asyncomplete-neosnippet.vim'
 Plugin 'Shougo/neosnippet.vim'
 Plugin 'prabirshrestha/vim-lsp'
+Plugin 'mattn/vim-lsp-settings'
 Plugin 'thomasfaingnaert/vim-lsp-snippets'
 Plugin 'thomasfaingnaert/vim-lsp-ultisnips'
 Plugin 'pdavydov108/vim-lsp-cquery'
@@ -218,7 +224,7 @@ if executable('clangd')
     autocmd User lsp_setup call lsp#register_server({
     \ 'name': 'clangd',
     \ 'cmd': {server_info->['clangd']},
-    \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp']
+    \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'h', 'hpp']
     \ })
     autocmd Filetype c,cpp,objc,objcpp,cc setlocal omnifunc=lsp#complete
   augroup end
@@ -240,7 +246,8 @@ au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#source
    \ }))"
 
 let g:lsp_signs_enabled = 1         " enable signs
-let g:lsp_diagnostics_echo_cursor = 0 " enable echo under cursor when in normal mode
+let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
+let g:lsp_text_prop_enabled = 1 " 
 
 let g:lsp_signs_error = {'text': '✗'}
 let g:lsp_signs_warning = {'text': '‼'}
