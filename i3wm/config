@@ -13,8 +13,20 @@ set $mod Mod1
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango:Dejavu Sans, IPAGothic Italic 9
+font pango:Dejavu Sans, IPAGothic Italic 15
 
+# 色
+set $background #2b303b
+set $foreground #c0c5ce
+set $secondary #3f4751
+set $black #2b303b
+set $red #bf616a
+set $green #a3be8c
+set $yellow #ebcb8b
+set $blue #8fa1b3
+set $magenta #b48ead
+set $cyan #96b5b4
+set $white #c0c5ce
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
 #font pango:DejaVu Sans Mono 8
@@ -161,12 +173,38 @@ bindsym $mod+r mode "resize"
 # bindsym $mod+Print exec sh -c "gnome-screenshot -i"
 # bindsym Print exec --no-startup-id import -window root ~/Pictures/screenshot`date "+%y%m%d%H%M"`.jpg
 
+# Pulse Audio controls
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5%
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5%
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle
+
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-        status_command i3status
-        tray_output primary
-        font pango+DejaVu Sans Mono 12px
+        status_command i3blocks
+        font pango:Hack Regular 10
+        mode dock
+        position top
+        separator_symbol " || "
+        workspace_buttons yes
+        strip_workspace_numbers yes
+        binding_mode_indicator yes
+        tray_output none
+        tray_padding 0
+        colors {
+            background $background
+            # focused_background $background
+            # statusline $blue
+            # focused_statusline $blue
+            # separator $secondary
+            # focused_separator $secondary
+            # # 左からborder, bg, fg
+            # focused_workspace  $blue $blue $background
+            # active_workspace $background $background $foreground
+            # inactive_workspace $background $background $foreground
+            # urgent_workspace   $red $red $background
+            # binding_mode       $blue $blue $background
+        }
 }
 exec "setxkbmap -layout us"
 # exec "setxkbmap -option 'grp:alt_shift_toggle'"
@@ -178,3 +216,4 @@ exec --no-startup-id ~/.config/i3/script/monitor_detect.sh
 #interactive flameshot by pressing printscreen
 exec --no-startup-id flameshot
 bindsym Print exec "flameshot gui"
+exec --no-startup-id pulseaudio --start
