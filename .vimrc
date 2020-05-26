@@ -25,6 +25,16 @@ Plugin 'tpope/vim-surround'
 " The following are examples of different formats supported.
 " Keep Plugin commands between vundle#begin/end.
 
+" 半角/全角変換
+Plugin 'shinchu/hz_ja.vim'
+function! HankakuMd()
+    let pos = getpos('.')
+    " ascii文字を全角から半角に変換
+    %HzjaConvert han_ascii
+    call setpos('.', pos)
+endfunction
+" md保存時は自動実行
+autocmd BufWrite *.md :call HankakuMd()
 
 " ----For Python editor----
 " add indent line
@@ -129,41 +139,41 @@ let g:lightline.component_type = {
       \ }
 "
 Plugin 'thinca/vim-quickrun'
+Plugin 'ObserverOfTime/coloresque.vim'
+let g:coloresque_whitelist = [
+        \   'css', 'conf', 'config', 'haml', 'html', 'htmldjango',
+        \   'javascript', 'jsx', 'less', 'php',
+        \   'postcss', 'pug', 'qml', 'sass',
+        \   'scss', 'sh', 'stylus', 'svg',
+        \   'typescript', 'vim', 'vue', 'xml']
+Plugin 'KabbAmine/vCoolor.vim'
 " エディタの分割方向を設定する
 set splitbelow
 set splitright
 
 " ファイル検索
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'rking/ag.vim'
-" キャッシュを利用して高速検索
-let g:ctrlp_use_caching = 1
-" vim終了時にキャッシュをクリアしない
-let g:ctrlp_clear_cache_on_exit = 0
-" # <C-r>でキャッシュをクリアして再検索
-let g:ctrlp_prompt_mappings = { 'PrtClearCache()': ['<C-r>'] }
-" # 検索の際に200[ms]のウェイトを入れる（１文字入力の度に検索結果がコロコロ変わるのが気に入らないため）
-let g:ctrlp_lazy_update = 200
-" キャッシュを保持するとgit checkout時にファイル差分があるのでキャッシュクリア
-" キャッシュを保持しなくてもagがあれば早い
-if executable('ag')
-  " sudo apt install silversearcher-ag
-  let g:ctrlp_use_caching=0
-  let g:ctrlp_user_command='ag %s -i --nocolor --nogroup -g ""'
-endif
-
-" 検索モードを開く
-nmap <Leader>f :CtrlP<CR>
+Plugin 'iberianpig/ranger-explorer.vim'
+nnoremap <silent><Leader>c :RangerOpenCurrentDir<CR>
+nnoremap <silent><Leader>f :RangerOpenProjectRootDir<CR>
 
 " fzf vim setting
 Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
 nnoremap <silent> ,f :GFiles<CR>
-nnoremap <silent> ,F :GFiles?<CR>
+nnoremap <silent> ,F :Files<CR>
 nnoremap <silent> ,b :Buffers<CR>
 nnoremap <silent> ,l :BLines<CR>
 nnoremap <silent> ,h :History<CR>
 nnoremap <silent> ,m :Mark<CR>
+
+" Path completion with custom source command
+inoremap <expr> <c-x><c-f> fzf#vim#complete#path('fd')
+inoremap <expr> <c-x><c-f> fzf#vim#complete#path('rg --files')
+
+" Word completion with custom spec with popup layout option
+inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'window': { 'width': 0.2, 'height': 0.9, 'xoffset': 1 }})
+inoremap <expr> <c-x><c-l> fzf#vim#complete#line({'window': { 'width': 1, 'height': 0.6, 'xoffset': 0.2 }})
+
 " url開く
 Plugin 'tyru/open-browser.vim'
 " カーソル下のURLや単語をブラウザで開く
@@ -174,6 +184,8 @@ vmap <Leader>b <Plug>(openbrowser-smart-search)
 Plugin 'tomasr/molokai'
 Plugin 'sjl/badwolf'
 Plugin 'w0ng/vim-hybrid'
+Plugin 'cocopon/iceberg.vim'
+
 " comment out on/off by \c
 Plugin 'tyru/caw.vim'
 " caw comment out
@@ -229,16 +241,61 @@ if executable('clangd')
     autocmd Filetype c,cpp,objc,objcpp,cc setlocal omnifunc=lsp#complete
   augroup end
 endif
+if executable('yaml-language-server')
+  augroup LspYaml
+   autocmd!
+   autocmd User lsp_setup call lsp#register_server({
+      \ 'name': 'yaml-language-server',
+      \ 'cmd': {server_info->['yaml-language-server', '--stdio']},
+      \ 'whitelist': ['yaml', 'yaml.ansible'],
+      \ 'workspace_config': {
+      \   'yaml': {
+      \     'validate': v:true,
+      \     'hover': v:true,
+      \     'completion': v:true,
+      \     'customTags': [],
+      \     'schemas': {
+      \       'https://raw.githubusercontent.com/travis-ci/travis-yml/master/schema.json': '/.travis.yml',
+      \       'https://raw.githubusercontent.com/docker/compose/master/compose/config/config_schema_v3.4.json': '/docker-compose.yml'
+      \      },
+      \     'schemaStore': { 'enable': v:false},
+      \   }
+      \ }
+      \})
+    autocmd Filetype yaml setlocal omnifunc=lsp#complete
+  augroup END
+endif
+" let g:lsp_settings = {
+"\   'yaml-language-server': {
+"\     'workspace_config': {
+"\       'yaml': {
+"\         'schemas': {
+"\           'https://raw.githubusercontent.com/travis-ci/travis-yml/master/schema.json': '.travis.yml'
+"\         },
+"\         'completion': v:true,
+"\         'hover': v:true,
+"\         'validate': v:true,
+"\       },
+"\     },
+"\     'whitelist': ['yaml'],
+"\   },
+"\ }
+" let g:lsp_settings = {
+"\   'yaml-language-server': {
+"\     'workspace_config': {
+"\       'yaml': {
+"\         'schemas': {
+"\           'https://raw.githubusercontent.com/docker/compose/master/compose/config/config_schema_v3.4.json': '/docker-compose.yml'
+"\         },
+"\         'completion': v:true,
+"\         'hover': v:true,
+"\         'validate': v:true,
+"\       },
+"\     },
+"\     'whitelist': ['yaml.docker-compose'],
+"\   },
+"\ }
 set completeopt+=menuone
-" if executable('cquery')
-"    au User lsp_setup call lsp#register_server({
-"    \ 'name': 'cquery',
-"    \ 'cmd': {server_info->['cquery']},
-"    \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
-"    \ 'initialization_options': { 'cacheDirectory': '/tmp/cquery/cache' },
-"    \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
-"    \ })
-" endif
 au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#neosnippet#get_source_options({
    \ 'name': 'neosnippet',
    \ 'whitelist': ['*'],
@@ -358,10 +415,10 @@ vnoremap <silent><Space>s :OverCommandLine<CR>s//g<Left><Left>
 nnoremap sub :OverCommandLine<CR>%s/<C-r><C-w>//g<Left><Left>
 
 " Plugin for ROS 
-" Plugin 'taketwo/vim-ros'
-" let g:ros_make = 'current'
-" let g:ros_build_system = 'catkin-tools'
-" let g:ros_catkin_make_options = ''
+Plugin 'taketwo/vim-ros'
+let g:ros_make = 'current'
+let g:ros_build_system = 'catkin-tools'
+let g:ros_catkin_make_options = ''
 " command list
 "   - :A 現在編集してるC++のコードに対応するソースコードorヘッダファイル を自動検索
 "   - :roscd
@@ -383,7 +440,6 @@ nnoremap <leader>gd :Gvdiffsplit!<CR>
 nnoremap gdh :diffget //2<CR>
 nnoremap gdl :diffget //3<CR>
 
-" For Markdown
 Plugin 'godlygeek/tabular'
 
 Plugin 'plasticboy/vim-markdown'
@@ -400,14 +456,6 @@ au BufRead,BufNewFile *.md set filetype=markdown
 " Plugin 'L9'
 " Git plugin not hosted on GitHub
 Plugin 'git://git.wincent.com/command-t.git'
-" git repos on your local machine (i.e. when working on your own plugin)
-"Plugin 'file:///home/gisen/.vim/plugin'
-" The sparkup vim script is in a subdirectory of this repo called vim.
-" Pass the path to set the runtimepath properly.
-	" Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
-" Install L9 and avoid a Naming conflict if you've already installed a
-" different version somewhere else.
-" Plugin 'ascenator/L9', {'name': 'newL9'}
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -437,7 +485,7 @@ filetype plugin indent on    " required
 syntax enable
 " カラースキーム設定、お好きにどうぞ
 set background=dark
-colorscheme hybrid
+colorscheme iceberg
 set t_Co=256
 
 " vimrc.localがあればそれも読み込む
@@ -507,7 +555,8 @@ if has('unnamedplus')
     else
             set clipboard& clipboard+=unnamed
             endif
-
+" ctrl-Cでxsel primaryにコピー
+vmap <C-c> :w !xsel -i<CR><CR>
 " Swapファイル？Backupファイル？前時代的すぎ
 " なので全て無効化する
 set nowritebackup
@@ -529,9 +578,9 @@ set novisualbell
 "set listchars=tab:>-,trail:-,extends:>>,precedes:<<,nbsp:%,eol:~
 set listchars=tab:>-,nbsp:%,eol:~,trail:-,space:.
 "マクロ及びキー設定
- " 入力モード中に素早くjjと入力した場合はESCとみなす
-inoremap jj <Esc>
-inoremap っｊ <Esc>
+ " 入力モード中に素早くjkと入力した場合はESCとみなす
+inoremap jk <Esc>
+inoremap ｊｋ <Esc>
 
 " ESCを二回押すことでハイライトを消す
 nmap <silent> <Esc><Esc> :nohlsearch<CR>
@@ -578,7 +627,6 @@ nnoremap <silent> [toggle]l :setl list!<CR>:setl list?<CR>
 nnoremap <silent> [toggle]t :setl expandtab!<CR>:setl expandtab?<CR>
 nnoremap <silent> [toggle]w :setl wrap!<CR>:setl wrap?<CR>
 " "Leader キーをspaceに
-" let mapleader = "\<Space>"
 "Space+oでnew file
 nnoremap <Leader>o :e<CR>
 "ファイル保存
@@ -653,7 +701,6 @@ nnoremap <Leader>n :bn<CR>
 " inoremap <C-k> <Up>
 " inoremap <C-h> <Left>
 " inoremap <C-l> <Right>
-inoremap っｊ <Esc>
 
 " 日本語入力時にEscを押すと勝手にIMEがOFFになる
 
@@ -661,4 +708,4 @@ function! ImInActivate()
   call system('fcitx-remote -c')
 endfunction
 inoremap <silent> <C-[> <ESC>:call ImInActivate()<CR>
-inoremap っｊ <ESC>:call ImInActivate()<CR>
+inoremap ｊｋ <ESC>:call ImInActivate()<CR>

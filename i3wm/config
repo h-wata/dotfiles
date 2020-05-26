@@ -14,9 +14,8 @@ set $mod Mod1
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
 font pango:Dejavu Sans, IPAGothic Italic 15
-
 # 色
-set $background #2b303b
+set $background #2E3647
 set $foreground #c0c5ce
 set $secondary #3f4751
 set $black #2b303b
@@ -42,7 +41,9 @@ set $white #c0c5ce
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec i3-sensible-terminal
+bindsym $mod+Return exec gnome-terminal
+# bindsym $mod+Return exec i3-sensible-terminal -e tmux
+# bindsym $mod+Return exec sh -e tmux
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -139,8 +140,8 @@ bindsym $mod+Shift+r restart
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 # Screen brightness controls
-bindsym XF86MonBrightnessUp exec xbacklight -inc 20
-bindsym XF86MonBrightnessDown exec xbacklight -dec 20
+bindsym XF86MonBrightnessUp exec light -A 20 && pkill -SIGRTMIN+2 i3blocks
+bindsym XF86MonBrightnessDown exec light -U 20 && pkill -SIGRTMIN+2 i3blocks
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -174,15 +175,15 @@ bindsym $mod+r mode "resize"
 # bindsym Print exec --no-startup-id import -window root ~/Pictures/screenshot`date "+%y%m%d%H%M"`.jpg
 
 # Pulse Audio controls
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5%
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5%
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% && pkill -SIGRTMIN+1 i3blocks
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% && pkill -SIGRTMIN+1 i3blocks
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle && pkill -SIGRTMIN+1 i3blocks
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
         status_command i3blocks
-        font pango:Hack Regular 10
+        font pango:Hack Regular 10, FontAwesome 10
         mode dock
         position top
         separator_symbol " || "
@@ -194,15 +195,15 @@ bar {
         colors {
             background $background
             # focused_background $background
-            # statusline $blue
+            statusline $blue
             # focused_statusline $blue
             # separator $secondary
             # focused_separator $secondary
             # # 左からborder, bg, fg
-            # focused_workspace  $blue $blue $background
-            # active_workspace $background $background $foreground
-            # inactive_workspace $background $background $foreground
-            # urgent_workspace   $red $red $background
+            focused_workspace  $blue $blue $background
+            active_workspace $background $background $foreground
+            inactive_workspace $background $background $foreground
+            urgent_workspace   $red $red $background
             # binding_mode       $blue $blue $background
         }
 }
@@ -217,3 +218,11 @@ exec --no-startup-id ~/.config/i3/script/monitor_detect.sh
 exec --no-startup-id flameshot
 bindsym Print exec "flameshot gui"
 exec --no-startup-id pulseaudio --start
+# Disable window border
+for_window [class="^.*"] border pixel 1
+
+
+# Gaps
+# gaps inner 6
+# gaps outer 0
+# smart_gaps on
