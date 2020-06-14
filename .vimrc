@@ -1,16 +1,19 @@
 set encoding=utf-8
 set fileformats=unix,dos,mac
 set fileencodings=utf-8,sjis,euc-jp,iso-2022-jp
-
+set relativenumber
+set cursorline
 set nocompatible              " be iMproved, required
 set wildmenu " コマンドモードの補完
 filetype off                  " required
 
 "Leader キーをspaceに
 let mapleader = "\<Space>"
+let g:termdebug_wide= 163
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
+set rtp+=~/.vim/runtime/
 call vundle#begin()
 " alternatively, pass a path where Vundle should install plugins
 "call vundle#begin('~/some/path/here')
@@ -22,53 +25,28 @@ Plugin 'tpope/vim-surround'
 " The following are examples of different formats supported.
 " Keep Plugin commands between vundle#begin/end.
 
-" Track the engine.
-Plugin 'SirVer/ultisnips'
+" 半角/全角変換
+Plugin 'shinchu/hz_ja.vim'
+function! HankakuMd()
+    let pos = getpos('.')
+    " ascii文字を全角から半角に変換
+    %HzjaConvert han_ascii
+    call setpos('.', pos)
+endfunction
+" md保存時は自動実行
+autocmd BufWrite *.md :call HankakuMd()
 
-
-" Snippets are separated from the engine. Add this if you want them:
-Plugin 'honza/vim-snippets'
-" https://github.com/SirVer/ultisnips/issues/519
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-let g:UltiSnipsSnippetsDir='~/.vim/snipets'
-let g:UltiSnipsEditSplit="vertical"
-let g:ulti_expand_or_jump_res = 0
-function! CleverTab()"{{{
-    call UltiSnips#ExpandSnippetOrJump()
-    if g:ulti_expand_or_jump_res
-        return ""
-    else
-        if pumvisible()
-            return "\<c-n>"
-        else
-            return neocomplete#start_manual_complete()
-        endif
-    endif
-endfunction"}}}
-
-inoremap <silent> <tab> <c-r>=CleverTab()<cr>
-snoremap <silent> <tab> <esc>:call UltiSnips#ExpandSnippetOrJump()<cr>
-" inoremap <silent> <tab> <c-r>=g:UltiSnips_Complete()<cr>
-" snoremap <silent> <tab> <esc>:call UltiSnips#ExpandSnippetOrJump()<cr>
-
-" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-" let g:UltiSnipsExpandTrigger="<TAB>"
-" let g:UltiSnipsJumpForwardTrigger="<tab>"
-" let g:UltiSnipsJumpBackwardTrigger="<S-tab>"
-let g:UltiSnipsSnippetDirectories =["snipet","UltiSnips"]
-" inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<C-R>=UltiSnips#ExpandSnippet()"
-set runtimepath+=~/.vim/snipets/
 " ----For Python editor----
 " add indent line
 Plugin 'Yggdroot/indentLine'
+let g:indentLine_char = '┆'
+" let g:indentLine_conceallevel = 2
 " Python補完 apt-get install python-jedi
 Plugin 'davidhalter/jedi-vim'
 " pythonのrename用のマッピングがquickrunとかぶるため回避させる
 let g:jedi#rename_command = "<leader>t"
 let g:jedi#usages_command = "<leader>h"
-let g:jedi#documentation_command= "z"
+let g:jedi#documentation_command= "<leader>z"
 autocmd FileType python setlocal completeopt-=preview " ポップアップを表示しない
 " autopep 
 " lint tools for cpp, python, js
@@ -84,14 +62,17 @@ Plugin 'w0rp/ale'
     let g:ale_statusline_format = ['x %d', '⚠ %d', 'ok']
     let g:ale_lint_on_text_change = 0
     let g:ale_lint_on_enter = 1
-    let g:ale_cpp_cpplint_options= '--quiet --filter=-whitespace/tab,-whitespace/braces,-legal/copyright'
-    let g:ale_c_clangformat_options= '-style="{BasedOnStyle: Google, IndentWidth: 4, Standard: Cpp11}"'
+    let g:ale_cpp_cpplint_options= '--linelength=150 --quiet --filter=-whitespace/braces,-whitespace/tab'
+    let g:ale_python_flake8_options= '--max-line-length=100'
+    " let g:ale_cpp_cpplint_options= '--linelength=150 --quiet --filter=-whitespace/tab,-whitespace/braces,-legal/copyright'
+    let g:ale_c_clangformat_options= '-style=file'
     let g:ale_python_autopep8_options= '-a -a --max-line-length=100'
     let g:ale_linters = {
        \ 'python' : ['flake8'],
        \ 'cpp' : ['cpplint'],
        \ 'xml' : ['xmllint'],
        \ 'javascript': ['eslint'],
+       \ 'sh': ['shellcheck'],
        \ }
     let g:ale_fixers= {
        \ 'javascript': ['prettier'],
@@ -107,6 +88,10 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'airblade/vim-gitgutter'
+nmap ]h <Plug>(GitGutterNextHunk )
+nmap [h <Plug>(GitGutterPrevHunk)
+nmap <Leader>ha <Plug>(GitGutterStageHunk)
+nmap <Leader>hu <Plug>(GitGutterRevertHunk)
 " 隠しファイルを表示する
 let NERDTreeShowHidden = 1
 nnoremap <silent><C-e> :NERDTreeFocusToggle<CR>
@@ -122,6 +107,7 @@ let g:EasyMotion_keys='hjklasdfgyuiopqwertnmzxcvbHJKLASDFGYUIOPQWERTNMZXCVB'
 let g:EasyMotion_leader_key="'"
 " 1 ストローク選択を優先する
 let g:EasyMotion_grouping=1
+nmap 's <Plug>(easymotion-s2)
 
 " インターフェイス変更
 " airlineが重いのでlightlineを使う
@@ -130,8 +116,11 @@ let g:lightline = {
 \'active': {
 \  'left': [
 \    ['mode', 'paste'],
-\    ['readonly', 'filename', 'modified'],
+\    ['gitbranch', 'readonly', 'filename', 'modified'],
 \    [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ] ],
+\ },
+\ 'component_function':{
+\   'gitbranch': 'fugitive#head'
 \ },
 \ }
 
@@ -150,31 +139,40 @@ let g:lightline.component_type = {
       \ }
 "
 Plugin 'thinca/vim-quickrun'
+Plugin 'ObserverOfTime/coloresque.vim'
+let g:coloresque_whitelist = [
+        \   'css', 'conf', 'config', 'haml', 'html', 'htmldjango',
+        \   'javascript', 'jsx', 'less', 'php',
+        \   'postcss', 'pug', 'qml', 'sass',
+        \   'scss', 'sh', 'stylus', 'svg',
+        \   'typescript', 'vim', 'vue', 'xml']
+Plugin 'KabbAmine/vCoolor.vim'
 " エディタの分割方向を設定する
 set splitbelow
 set splitright
 
 " ファイル検索
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'rking/ag.vim'
-" キャッシュを利用して高速検索
-let g:ctrlp_use_caching = 1
-" vim終了時にキャッシュをクリアしない
-let g:ctrlp_clear_cache_on_exit = 0
-" # <C-r>でキャッシュをクリアして再検索
-let g:ctrlp_prompt_mappings = { 'PrtClearCache()': ['<C-r>'] }
-" # 検索の際に200[ms]のウェイトを入れる（１文字入力の度に検索結果がコロコロ変わるのが気に入らないため）
-let g:ctrlp_lazy_update = 200
-" キャッシュを保持するとgit checkout時にファイル差分があるのでキャッシュクリア
-" キャッシュを保持しなくてもagがあれば早い
-if executable('ag')
-  " sudo apt install silversearcher-ag
-  let g:ctrlp_use_caching=0
-  let g:ctrlp_user_command='ag %s -i --nocolor --nogroup -g ""'
-endif
+Plugin 'iberianpig/ranger-explorer.vim'
+nnoremap <silent><Leader>c :RangerOpenCurrentDir<CR>
+nnoremap <silent><Leader>f :RangerOpenProjectRootDir<CR>
 
-" 検索モードを開く
-nmap <Leader>f :CtrlP<CR>
+" fzf vim setting
+Plugin 'junegunn/fzf'
+Plugin 'junegunn/fzf.vim'
+nnoremap <silent> ,f :GFiles<CR>
+nnoremap <silent> ,F :Files<CR>
+nnoremap <silent> ,b :Buffers<CR>
+nnoremap <silent> ,l :BLines<CR>
+nnoremap <silent> ,h :History<CR>
+nnoremap <silent> ,m :Mark<CR>
+
+" Path completion with custom source command
+inoremap <expr> <c-x><c-f> fzf#vim#complete#path('fd')
+inoremap <expr> <c-x><c-f> fzf#vim#complete#path('rg --files')
+
+" Word completion with custom spec with popup layout option
+inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'window': { 'width': 0.2, 'height': 0.9, 'xoffset': 1 }})
+inoremap <expr> <c-x><c-l> fzf#vim#complete#line({'window': { 'width': 1, 'height': 0.6, 'xoffset': 0.2 }})
 
 " url開く
 Plugin 'tyru/open-browser.vim'
@@ -186,6 +184,8 @@ vmap <Leader>b <Plug>(openbrowser-smart-search)
 Plugin 'tomasr/molokai'
 Plugin 'sjl/badwolf'
 Plugin 'w0ng/vim-hybrid'
+Plugin 'cocopon/iceberg.vim'
+
 " comment out on/off by \c
 Plugin 'tyru/caw.vim'
 " caw comment out
@@ -195,91 +195,172 @@ vmap <Leader>c <Plug>(caw:hatpos:toggle)
 " ---- For C++ ----
 " 関数前で:Doxとうつと自動でコメント挿入
 Plugin 'DoxygenToolkit.vim'
-" 自動補完
-Plugin 'Shougo/neocomplete.vim'
-" C++用自動補完
-Plugin 'justmao945/vim-clang'
 
-" neocomplete and vim-clang setting >>>
-" 'Shougo/neocomplete.vim' {{{
-let g:neocomplete#enable_at_startup = 1
-
-if !exists('g:neocomplete#force_omni_input_patterns')
-  let g:neocomplete#force_omni_input_patterns = {} 
-endif
-let g:neocomplete#force_overwrite_completefunc = 1
-let g:neocomplete#force_omni_input_patterns.c =
-      \ '[^.[:digit:] *\t]\%(\.\|->\)\w*'
-let g:neocomplete#force_omni_input_patterns.cpp =
-      \ '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
-let g:neocomplete#enable_smart_case = 1
-" 3文字以上の単語に対して補完を有効にする
-let g:neocomplete#min_keyword_length = 3
-" 区切り文字まで補完する
-let g:neocomplete#enable_auto_delimiter = 1
-" 1文字目の入力から補完のポップアップを表示
-let g:neocomplete#auto_completion_start_length = 1
-" バックスペースで補完のポップアップを閉じる
-inoremap <expr><BS> neocomplete#smart_close_popup()."<C-h>"
-
-" }}}
-"
-" 'justmao945/vim-clang' {{{
-
-" disable auto completion for vim-clang
-let g:clang_auto = 0
-" default 'longest' can not work with neocomplete
-let g:clang_c_completeopt   = 'menuone'
-let g:clang_cpp_completeopt = 'menuone'
-
-function! s:get_latest_clang(search_path)
-    let l:filelist = split(globpath(a:search_path, 'clang-*'), '\n')
-    let l:clang_exec_list = []
-    for l:file in l:filelist
-        if l:file =~ '^.*clang-\d\.\d$'
-            call add(l:clang_exec_list, l:file)
-        endif
-    endfor
-    if len(l:clang_exec_list)
-        return reverse(l:clang_exec_list)[0]
-    else
-        return 'clang'
-    endif
-endfunction
-
-function! s:get_latest_clang_format(search_path)
-    let l:filelist = split(globpath(a:search_path, 'clang-format-*'), '\n')
-    let l:clang_exec_list = []
-    for l:file in l:filelist
-        if l:file =~ '^.*clang-format-\d\.\d$'
-            call add(l:clang_exec_list, l:file)
-        endif
-    endfor
-    if len(l:clang_exec_list)
-        return reverse(l:clang_exec_list)[0]
-    else
-        return 'clang-format'
-    endif
-endfunction
-
-let g:clang_exec = s:get_latest_clang('/usr/bin')
-let g:clang_format_exec = s:get_latest_clang_format('/usr/bin')
-
-let g:clang_c_options = '-std=c11'
-let g:clang_cpp_options = '-std=c++11 -stdlib=libc++'
-
-
-" }}}
 " <<<neocomplete and vim-clang setting
+" vim-lsp setting
+Plugin 'prabirshrestha/async.vim'
+Plugin 'prabirshrestha/asyncomplete.vim'
+Plugin 'prabirshrestha/asyncomplete-lsp.vim'
+Plugin 'prabirshrestha/asyncomplete-buffer.vim'
+Plugin 'prabirshrestha/asyncomplete-neosnippet.vim'
+Plugin 'Shougo/neosnippet.vim'
+Plugin 'prabirshrestha/vim-lsp'
+Plugin 'mattn/vim-lsp-settings'
+Plugin 'thomasfaingnaert/vim-lsp-snippets'
+Plugin 'thomasfaingnaert/vim-lsp-ultisnips'
+Plugin 'pdavydov108/vim-lsp-cquery'
+autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>fv :LspCqueryDerived<CR>
+autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>fc :LspCqueryCallers<CR>
+autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>fb :LspCqueryBase<CR>
+autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>fi :LspCqueryVars<CR>
+
+if executable('pyls')
+    " pip install python-language-server
+  augroup vim_lsp_py
+    autocmd!
+    autocmd User lsp_setup call lsp#register_server({
+       \ 'name': 'pyls',
+       \ 'cmd': {server_info->['pyls']},
+       \ 'whitelist': ['python'],
+       \ })
+    autocmd Filetype py setlocal omnifunc=lsp#complete
+  augroup end
+endif
+
+" clangd, cqueryはプロジェクトのcompile_commands.jsonを読んで補完を行うので
+" cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ONのオプションでビルドし、
+" project root dirにjsonを貼る必要がある
+if executable('clangd')
+  augroup vim_lsp_cpp
+    autocmd!
+    autocmd User lsp_setup call lsp#register_server({
+    \ 'name': 'clangd',
+    \ 'cmd': {server_info->['clangd']},
+    \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'h', 'hpp']
+    \ })
+    autocmd Filetype c,cpp,objc,objcpp,cc setlocal omnifunc=lsp#complete
+  augroup end
+endif
+if executable('yaml-language-server')
+  augroup LspYaml
+   autocmd!
+   autocmd User lsp_setup call lsp#register_server({
+      \ 'name': 'yaml-language-server',
+      \ 'cmd': {server_info->['yaml-language-server', '--stdio']},
+      \ 'whitelist': ['yaml', 'yaml.ansible'],
+      \ 'workspace_config': {
+      \   'yaml': {
+      \     'validate': v:true,
+      \     'hover': v:true,
+      \     'completion': v:true,
+      \     'customTags': [],
+      \     'schemas': {
+      \       'https://raw.githubusercontent.com/travis-ci/travis-yml/master/schema.json': '/.travis.yml',
+      \       'https://raw.githubusercontent.com/docker/compose/master/compose/config/config_schema_v3.4.json': '/docker-compose.yml'
+      \      },
+      \     'schemaStore': { 'enable': v:false},
+      \   }
+      \ }
+      \})
+    autocmd Filetype yaml setlocal omnifunc=lsp#complete
+  augroup END
+endif
+" let g:lsp_settings = {
+"\   'yaml-language-server': {
+"\     'workspace_config': {
+"\       'yaml': {
+"\         'schemas': {
+"\           'https://raw.githubusercontent.com/travis-ci/travis-yml/master/schema.json': '.travis.yml'
+"\         },
+"\         'completion': v:true,
+"\         'hover': v:true,
+"\         'validate': v:true,
+"\       },
+"\     },
+"\     'whitelist': ['yaml'],
+"\   },
+"\ }
+" let g:lsp_settings = {
+"\   'yaml-language-server': {
+"\     'workspace_config': {
+"\       'yaml': {
+"\         'schemas': {
+"\           'https://raw.githubusercontent.com/docker/compose/master/compose/config/config_schema_v3.4.json': '/docker-compose.yml'
+"\         },
+"\         'completion': v:true,
+"\         'hover': v:true,
+"\         'validate': v:true,
+"\       },
+"\     },
+"\     'whitelist': ['yaml.docker-compose'],
+"\   },
+"\ }
+set completeopt+=menuone
+au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#neosnippet#get_source_options({
+   \ 'name': 'neosnippet',
+   \ 'whitelist': ['*'],
+   \ 'completor': function('asyncomplete#sources#neosnippet#completor'),
+   \ }))"
+
+let g:lsp_signs_enabled = 1         " enable signs
+let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
+let g:lsp_text_prop_enabled = 1 " 
+
+let g:lsp_signs_error = {'text': '✗'}
+let g:lsp_signs_warning = {'text': '‼'}
+
+let g:asyncomplete_completion_delay=40
+
+autocmd FileType typescript setlocal omnifunc=lsp#complete
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
+
+" for debug
+let g:lsp_log_verbose = 1
+let g:lsp_log_file = expand('~/vim-lsp.log')
+let g:asyncomplete_log_file = expand('~/asyncomplete.log')
+
+Plugin 'Shougo/deoplete.nvim'
+if !has('nvim')
+  Plugin 'roxma/nvim-yarp'
+  Plugin 'roxma/vim-hug-neovim-rpc'
+endif
+
+Plugin 'Shougo/neosnippet-snippets'
+
+" Enable snipMate compatibility feature.
+let g:neosnippet#enable_snipmate_compatibility = 1
+
+" Tell Neosnippet about the other snippets
+let g:neosnippet#snippets_directory='~/.vim/snippets/snipet'
+
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+" SuperTab like snippets behavior.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+"imap <expr><TAB>
+" \ pumvisible() ? "\<C-n>" :
+" \ neosnippet#expandable_or_jumpable() ?
+" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+" For conceal markers.
+if has('conceal')
+  set conceallevel=2 concealcursor=niv
+endif
+
 " ctags setting>>>
 " ファイルタイプ毎 & gitリポジトリ毎にtagsの読み込みpathを変える
 function! ReadTags(type)
-   if a:type == 'cpp'
-      let type = 'c++'
-	 else
-		  let type = a:type
-   endif
-
+if a:type == 'cpp'
+    let type = 'c++'
+    else
+        let type = a:type
+endif
     try
         execute "set tags=".$HOME."/work/dotfiles/tags_files/".
               \ system("cd " . expand('%:p:h') . "; basename `git rev-parse --show-toplevel` | tr -d '\n'").
@@ -334,10 +415,10 @@ vnoremap <silent><Space>s :OverCommandLine<CR>s//g<Left><Left>
 nnoremap sub :OverCommandLine<CR>%s/<C-r><C-w>//g<Left><Left>
 
 " Plugin for ROS 
-" Plugin 'taketwo/vim-ros'
-" let g:ros_make = 'current'
-" let g:ros_build_system = 'catkin-tools'
-" let g:ros_catkin_make_options = ''
+Plugin 'taketwo/vim-ros'
+let g:ros_make = 'current'
+let g:ros_build_system = 'catkin-tools'
+let g:ros_catkin_make_options = ''
 " command list
 "   - :A 現在編集してるC++のコードに対応するソースコードorヘッダファイル を自動検索
 "   - :roscd
@@ -354,16 +435,16 @@ Plugin 'tpope/vim-fugitive'
 set diffopt+=vertical
 " Statuslineの設定
 set laststatus=2
-set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ \[ENC=%{&fileencoding}]%{ALEGetStatusLine()}%P
-nnoremap <leader>gd :Gvdiff<CR>
+" set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ \[ENC=%{&fileencoding}]%{ALEGetStatusLine()}%P
+nnoremap <leader>gd :Gvdiffsplit!<CR>
 nnoremap gdh :diffget //2<CR>
 nnoremap gdl :diffget //3<CR>
 
-" For Markdown
 Plugin 'godlygeek/tabular'
 
 Plugin 'plasticboy/vim-markdown'
 let g:vim_markdown_conceal = 0
+let g:vim_markdown_conceal_code_blocks = 0
 
 " Plugin 'gabrielelana/vim-markdown'
 Plugin 'kannokanno/previm'
@@ -375,14 +456,6 @@ au BufRead,BufNewFile *.md set filetype=markdown
 " Plugin 'L9'
 " Git plugin not hosted on GitHub
 Plugin 'git://git.wincent.com/command-t.git'
-" git repos on your local machine (i.e. when working on your own plugin)
-"Plugin 'file:///home/gisen/.vim/plugin'
-" The sparkup vim script is in a subdirectory of this repo called vim.
-" Pass the path to set the runtimepath properly.
-	" Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
-" Install L9 and avoid a Naming conflict if you've already installed a
-" different version somewhere else.
-" Plugin 'ascenator/L9', {'name': 'newL9'}
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -412,7 +485,7 @@ filetype plugin indent on    " required
 syntax enable
 " カラースキーム設定、お好きにどうぞ
 set background=dark
-colorscheme hybrid
+colorscheme iceberg
 set t_Co=256
 
 " vimrc.localがあればそれも読み込む
@@ -482,7 +555,8 @@ if has('unnamedplus')
     else
             set clipboard& clipboard+=unnamed
             endif
-
+" ctrl-Cでxsel primaryにコピー
+vmap <C-c> :w !xsel -i<CR><CR>
 " Swapファイル？Backupファイル？前時代的すぎ
 " なので全て無効化する
 set nowritebackup
@@ -502,11 +576,11 @@ set novisualbell
 " デフォルト不可視文字は美しくないのでUnicodeで綺麗に
 
 "set listchars=tab:>-,trail:-,extends:>>,precedes:<<,nbsp:%,eol:~
-set listchars=tab:>-,nbsp:%,eol:~,trail:-
+set listchars=tab:>-,nbsp:%,eol:~,trail:-,space:.
 "マクロ及びキー設定
- " 入力モード中に素早くjjと入力した場合はESCとみなす
-inoremap jj <Esc>
-inoremap っｊ <Esc>
+ " 入力モード中に素早くjkと入力した場合はESCとみなす
+inoremap jk <Esc>
+inoremap ｊｋ <Esc>
 
 " ESCを二回押すことでハイライトを消す
 nmap <silent> <Esc><Esc> :nohlsearch<CR>
@@ -553,7 +627,6 @@ nnoremap <silent> [toggle]l :setl list!<CR>:setl list?<CR>
 nnoremap <silent> [toggle]t :setl expandtab!<CR>:setl expandtab?<CR>
 nnoremap <silent> [toggle]w :setl wrap!<CR>:setl wrap?<CR>
 " "Leader キーをspaceに
-" let mapleader = "\<Space>"
 "Space+oでnew file
 nnoremap <Leader>o :e<CR>
 "ファイル保存
@@ -615,19 +688,6 @@ if has('mouse')
         set ttymouse=xterm2
     endif
 endif
-" clang-format必須 C++整形
-" function! CPPCodeCleanup()
-"   " echo "Cleanup cpp code"
-"   let l:lines="all"
-"   let g:clang_format_fallback_style = 'Google'
-"   :pyf /usr/local/share/clang/clang-format.py
-" endfunction
-" command! CPPCodeCleanup call CPPCodeCleanup()
-"
-" autocmd BufWrite *.{cpp} :CPPCodeCleanup
-" autocmd BufWrite *.{hpp} :CPPCodeCleanup
-" autocmd BufWrite *.{c} :CPPCodeCleanup
-" autocmd BufWrite *.{h} :CPPCodeCleanup
 
 " vim内のタブ操作
 nnoremap <Leader>m :bp<CR>
@@ -636,12 +696,11 @@ nnoremap <Leader>n :bn<CR>
 "filetype plugin indent on
 "
 " 入力モードでのカーソル移動
-inoremap <C-d> <BS>
-inoremap <C-j> <Down>
-inoremap <C-k> <Up>
+" inoremap <C-> <BS>
+" inoremap <C-j> <Down>
+" inoremap <C-k> <Up>
 " inoremap <C-h> <Left>
 " inoremap <C-l> <Right>
-inoremap っｊ <Esc>
 
 " 日本語入力時にEscを押すと勝手にIMEがOFFになる
 
@@ -649,4 +708,4 @@ function! ImInActivate()
   call system('fcitx-remote -c')
 endfunction
 inoremap <silent> <C-[> <ESC>:call ImInActivate()<CR>
-inoremap っｊ <ESC>:call ImInActivate()<CR>
+inoremap ｊｋ <ESC>:call ImInActivate()<CR>
