@@ -1,0 +1,60 @@
+snippet launch 
+abbr roslaunch decleare
+  <?xml version="1.0"?>
+  <launch>
+  </launch>
+
+snippet group
+abbr    group
+  <group ns="${1:name}">
+  </group>
+
+snippet arg 
+abbr roslaunch argument
+  <arg name="${1:name}" default="${2:default}"/>
+
+snippet argcall
+abbr roslaunch argument with value
+  <arg name="${1:name}" value="${2:value}"/>
+
+snippet param
+abbr roslaunch param
+  <param name="${1:name}" value="${2:value}"/>
+
+snippet node
+abbr roslaunch node
+  <node name="${1:name}" pkg="${2:pkg}" type="${3:type}" respawn="${4:false}" output="${5:screen}">
+  </node>
+
+snippet include 
+abbr roslaunch include
+  <include file="\$(find ${1:package_name})/launch/${2:filename}">
+  </include>
+
+snippet remap
+abbr roslaunch remap
+  <remap from="$1" to="$2" />
+
+snippet launch-prefix-debug
+abbr roslaunch launch-prefix-debug
+  launch-prefix="xterm -e gdb -ex run --args"
+
+snippet <link 
+abbr robot link
+  <link name="${1:name}">
+    <visual>
+      <origin xyz="${2:0 0 0}" rpy="${3:0 0 0}"/>
+      <geometry>
+        <mesh filename="package://${4:my_package}/description/meshes/${5:my_mesh.dae}"
+              scale="${6:1 1 1}"/>
+      </geometry>
+    </visual>
+  </link>
+
+snippet <joint 
+abbr robot_joint
+  <joint name="${1:joint_name}" type="${2:fixed}">
+    <parent link="${3:world}" />
+    <child link = "${4:child_link}" />
+    <origin xyz="${5:0 0 0}" rpy="${6:0 0 0}" />
+  </joint>

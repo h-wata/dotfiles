@@ -1,0 +1,66 @@
+source "gpg -d ~/.config/neomutt/passwords.gpg |"
+# 
+# set imap_user = "youraddress@gmail.com"
+# set imap_pass = "yourpassword"
+# set smtp_url  = "smtp://youraddress@smtp.gmail.com:587/"
+# set smtp_pass = "yourpassword"
+# set from      = "youraddress@gmail.com"
+# set realname  = "Your Name"
+source ./mutt-colors-solarized/mutt-colors-solarized-dark-256.muttrc
+# source ./monokai
+set hostname = "gmail.com"
+set folder = "imaps://imap.gmail.com:993"
+
+set ssl_starttls = yes
+set ssl_force_tls = yes
+
+########################                                                                                        
+#   メーラー基本設定      #                                                                                        
+########################                                                                                        
+set sidebar_visible  = yes                       # サイドバーの表示                                             
+set sidebar_format = "%B%?F? [%F]?%* %?N?%N/?%S" # サイドバーの書式                                             
+set mail_check_stats                             # 定期的にメールの状態をチェック                               
+set sort_aux         = 'reverse-last-date-received'# 日付の降順でメール一覧を表示  
+set sort = 'threads'
+set auto_tag = yes
+set use_from         = yes                       # メールのFromヘッダを自動生成ON                                            
+set editor           = "vim"                     # メールを書く時のエディタ                                                  
+                                                 # 環境変数EDITORに従う場合、`echo \$EDITOR`と記載                           
+set charset          = "utf-8"                   # Terminal(およびメール送信時)で使用する文字コード                          
+set assumed_charset  = "utf-8:iso-2022-jp:euc-jp:shift_jis" # 文字コード指定がない場合のため、優先順位を設定    
+set mbox_type        = "maildir"                 # mbox=複数のメッセージが連結した形式で保存                                 
+                                                 # maildir=mail1通がファイル1個                                              
+set spoolfile        = "+INBOX"                  # フィルタされていないメールの受信先                                        
+mailboxes            = "+Debian"                                                                                
+set certificate_file = "~/.mutt/certificates"    # CAの証明書の格納先(接続先の認証ファイル)                        
+set mailcap_path     = "~/.mutt/mailcap"         # mailcapには、w3mを使ってHTMLメールを読む設定を記載              
+auto_view text/html                              # HTMLを自動でw3mで開封                                       
+
+##############################################################                                                  
+# キャッシュ設定(キャッシュ先ディレクトリを事前に作成する事) #                                                  
+##############################################################                                                  
+set header_cache     = "~/.mutt/cache/headers" # headerキャッシュのPATHを指定                                   
+set header_cache_backend=tokyocabinet
+set message_cachedir = "~/.mutt/cache/bodies"  # IMAP経由で受信したメッセージのキャッシュPATHを指定   
+
+# カラースキーム
+# basic colors ---------------------------------------------------------
+# color normal        color241        color234        
+# color error         color160        color234        
+# color tilde         color235        color234        
+# color message       color37         color234        
+# color markers       color160        color254        
+# color attachment    color254        color234        
+# color search        color61         color234        
+# #color status        J_black         J_status        
+# color status        color241        color235        
+# color indicator     color255        color13        
+# color tree          color13        color255                                    # arrow in thread
+
+# basic monocolor screen
+# mono  bold          bold
+# mono  underline     underline
+# mono  indicator     reverse
+# mono  error         bold
+# macro index,pager \cB ": unset wait_key; set pipe_decode\n|w3m\n: set wait_key; unset pipe_decode\n" "call w3m to extract URLs out of a message"
+# macro pager \cb <pipe-entry>'urlview'<enter> 'Follow links with urlview'
