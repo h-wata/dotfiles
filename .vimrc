@@ -42,18 +42,7 @@ Plugin 'Yggdroot/indentLine'
 let g:indentLine_char = '┆'
 " let g:indentLine_conceallevel = 2
 " Python補完 apt-get install python-jedi
-Plugin 'davidhalter/jedi-vim'
-" pythonのrename用のマッピングがquickrunとかぶるため回避させる
-let g:jedi#rename_command = "<leader>t"
-let g:jedi#usages_command = "<leader>h"
-let g:jedi#documentation_command= "<leader>z"
-autocmd FileType python setlocal completeopt-=preview " ポップアップを表示しない
-" autopep 
-" lint tools for cpp, python, js
-" pip install cpplint
-" pip install autopep8
-" 
-Plugin 'w0rp/ale'
+Plugin 'dense-analysis/ale'
     let g:ale_echo_msg_error_str = 'E'
     let g:ale_echo_msg_warning_str = 'W'
     let g:ale_sign_error = 'E'
@@ -63,24 +52,24 @@ Plugin 'w0rp/ale'
     let g:ale_lint_on_text_change = 0
     let g:ale_lint_on_enter = 1
     let g:ale_cpp_cpplint_options= '--linelength=150 --quiet --filter=-whitespace/braces,-whitespace/tab'
-    let g:ale_python_flake8_options= '--max-line-length=100'
-    " let g:ale_cpp_cpplint_options= '--linelength=150 --quiet --filter=-whitespace/tab,-whitespace/braces,-legal/copyright'
-    let g:ale_c_clangformat_options= '-style=file'
+    let g:ale_python_flake8_options= '--ignore=F401,W503 --max-line-length=120'
+    let g:ale_cpp_cpplint_options= '--linelength=150 --quiet --filter=-whitespace/tab,-whitespace/braces,-legal/copyright'
+    let g:ale_c_clangformat_options= '--style=file'
     let g:ale_python_autopep8_options= '-a -a --max-line-length=100'
     let g:ale_linters = {
-       \ 'python' : ['flake8'],
-       \ 'cpp' : ['cpplint'],
-       \ 'xml' : ['xmllint'],
-       \ 'javascript': ['eslint'],
-       \ 'sh': ['shellcheck'],
-       \ }
+      \ 'python' : ['flake8'],
+      \ 'cpp' : ['cpplint'],
+      \ 'xml' : ['xmllint'],
+      \ 'javascript': ['eslint'],
+      \ 'sh': ['shellcheck'],
+      \ }
     let g:ale_fixers= {
-       \ 'javascript': ['prettier'],
-       \ 'python' : ['autopep8'],
-       \ 'cpp' : ['clang-format'],
-       \ 'markdown': [
-       \   {buffer, lines -> {'command': 'textlint -c ~/.config/textlintrc -o /dev/null --fix --no-color --quiet %t', 'read_temporary_file': 1}}
-       \   ],
+      \ 'javascript': ['prettier'],
+      \ 'python' : ['autopep8'],
+      \ 'cpp' : ['clang-format'],
+      \ 'markdown': [
+      \   {buffer, lines -> {'command': 'textlint -c ~/.config/textlintrc -o /dev/null --fix --no-color --quiet %t', 'read_temporary_file': 1}}
+      \   ],
 	   \}
 	let g:ale_fix_on_save = 0
 " Tree構造を表示するC-e で表示 :help NERDtree参照
@@ -153,8 +142,8 @@ set splitright
 
 " ファイル検索
 Plugin 'iberianpig/ranger-explorer.vim'
-nnoremap <silent><Leader>c :RangerOpenCurrentDir<CR>
-nnoremap <silent><Leader>f :RangerOpenProjectRootDir<CR>
+nnoremap <silent><Leader>C :RangerOpenCurrentDir<CR>
+nnoremap <silent><Leader>F :RangerOpenProjectRootDir<CR>
 
 " fzf vim setting
 Plugin 'junegunn/fzf'
@@ -208,93 +197,28 @@ Plugin 'prabirshrestha/vim-lsp'
 Plugin 'mattn/vim-lsp-settings'
 Plugin 'thomasfaingnaert/vim-lsp-snippets'
 Plugin 'thomasfaingnaert/vim-lsp-ultisnips'
-Plugin 'pdavydov108/vim-lsp-cquery'
-autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>fv :LspCqueryDerived<CR>
-autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>fc :LspCqueryCallers<CR>
-autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>fb :LspCqueryBase<CR>
-autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>fi :LspCqueryVars<CR>
 
-if executable('pyls')
-    " pip install python-language-server
-  augroup vim_lsp_py
-    autocmd!
-    autocmd User lsp_setup call lsp#register_server({
-       \ 'name': 'pyls',
-       \ 'cmd': {server_info->['pyls']},
-       \ 'whitelist': ['python'],
-       \ })
-    autocmd Filetype py setlocal omnifunc=lsp#complete
-  augroup end
-endif
-
+function! s:on_lsp_buffer_enabled() abort
+  setlocal omnifunc=lsp#complete
+  setlocal signcolumn=yes
+  nmap <buffer> gd <plug>(lsp-definition)
+  nmap <buffer> gr <plug>(lsp-references)
+  nmap <buffer> gi <plug>(lsp-implementation)
+  nmap <buffer> gt <plug>(lsp-type-definition)
+  nmap <buffer> <leader>rn <plug>(lsp-rename)
+  nmap <buffer> [g <Plug>(lsp-previous-diagnostic)
+  nmap <buffer> ]g <Plug>(lsp-next-diagnostic)
+  nmap <buffer> K <plug>(lsp-hover)
+  inoremap <expr> <cr> pumvisible() ? "\<c-y>\<cr>" : "\<cr>"
+endfunction
+augroup lsp_install
+      au!
+        autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+augroup END
+command! LspDebug let lsp_log_verbose=1 | let lsp_log_file = expand('~/lsp.log')
 " clangd, cqueryはプロジェクトのcompile_commands.jsonを読んで補完を行うので
 " cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ONのオプションでビルドし、
 " project root dirにjsonを貼る必要がある
-if executable('clangd')
-  augroup vim_lsp_cpp
-    autocmd!
-    autocmd User lsp_setup call lsp#register_server({
-    \ 'name': 'clangd',
-    \ 'cmd': {server_info->['clangd']},
-    \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'h', 'hpp']
-    \ })
-    autocmd Filetype c,cpp,objc,objcpp,cc setlocal omnifunc=lsp#complete
-  augroup end
-endif
-if executable('yaml-language-server')
-  augroup LspYaml
-   autocmd!
-   autocmd User lsp_setup call lsp#register_server({
-      \ 'name': 'yaml-language-server',
-      \ 'cmd': {server_info->['yaml-language-server', '--stdio']},
-      \ 'whitelist': ['yaml', 'yaml.ansible'],
-      \ 'workspace_config': {
-      \   'yaml': {
-      \     'validate': v:true,
-      \     'hover': v:true,
-      \     'completion': v:true,
-      \     'customTags': [],
-      \     'schemas': {
-      \       'https://raw.githubusercontent.com/travis-ci/travis-yml/master/schema.json': '/.travis.yml',
-      \       'https://raw.githubusercontent.com/docker/compose/master/compose/config/config_schema_v3.4.json': '/docker-compose.yml'
-      \      },
-      \     'schemaStore': { 'enable': v:false},
-      \   }
-      \ }
-      \})
-    autocmd Filetype yaml setlocal omnifunc=lsp#complete
-  augroup END
-endif
-" let g:lsp_settings = {
-"\   'yaml-language-server': {
-"\     'workspace_config': {
-"\       'yaml': {
-"\         'schemas': {
-"\           'https://raw.githubusercontent.com/travis-ci/travis-yml/master/schema.json': '.travis.yml'
-"\         },
-"\         'completion': v:true,
-"\         'hover': v:true,
-"\         'validate': v:true,
-"\       },
-"\     },
-"\     'whitelist': ['yaml'],
-"\   },
-"\ }
-" let g:lsp_settings = {
-"\   'yaml-language-server': {
-"\     'workspace_config': {
-"\       'yaml': {
-"\         'schemas': {
-"\           'https://raw.githubusercontent.com/docker/compose/master/compose/config/config_schema_v3.4.json': '/docker-compose.yml'
-"\         },
-"\         'completion': v:true,
-"\         'hover': v:true,
-"\         'validate': v:true,
-"\       },
-"\     },
-"\     'whitelist': ['yaml.docker-compose'],
-"\   },
-"\ }
 set completeopt+=menuone
 au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#neosnippet#get_source_options({
    \ 'name': 'neosnippet',
@@ -302,14 +226,16 @@ au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#source
    \ 'completor': function('asyncomplete#sources#neosnippet#completor'),
    \ }))"
 
-let g:lsp_signs_enabled = 1         " enable signs
+let g:lsp_signs_enabled = 0         " enable signs
 let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
 let g:lsp_text_prop_enabled = 1 " 
 
 let g:lsp_signs_error = {'text': '✗'}
 let g:lsp_signs_warning = {'text': '‼'}
 
-let g:asyncomplete_completion_delay=40
+let g:asyncomplete_completion_delay=200
+let g:asyncomplete_auto_popup=1
+let g:asyncomplete_auto_autocompleteopt=1
 
 autocmd FileType typescript setlocal omnifunc=lsp#complete
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
@@ -363,20 +289,25 @@ if a:type == 'cpp'
 endif
     try
         execute "set tags=".$HOME."/work/dotfiles/tags_files/".
-              \ system("cd " . expand('%:p:h') . "; basename `git rev-parse --show-toplevel` | tr -d '\n'").
-              \ "/" . type . "_tags"
+             \ system("cd " . expand('%:p:h') . "; basename `git rev-parse --show-toplevel` | tr -d '\n'").
+             \ "/" . type . "_tags"
     catch
         execute "set tags=./tags/" . type . "_tags;"
     endtry
 endfunction
 
-augroup MackTagsAutoCmd
+" augroup MakeTagsAutoCmd
+"     autocmd!
+"     autocmd BufWrite *.py !make -f /home/gisen/work/dotfiles/ctags/Makefile
+"     autocmd BufWrite *.cpp !make -f /home/gisen/work/dotfiles/ctags/Makefile
+"     autocmd BufWrite *.php !make -f /home/gisen/work/dotfiles/ctags/Makefile
+"     autocmd BufWrite *.rb !make -f /home/gisen/work/dotfiles/ctags/Makefile
+" augroup END
+augroup MakeTagsAutoCmd
     autocmd!
-    autocmd BufWrite *.py !make -f /home/gisen/work/dotfiles/ctags/Makefile
-    autocmd BufWrite *.cpp !make -f /home/gisen/work/dotfiles/ctags/Makefile
-    autocmd BufWrite *.php !make -f /home/gisen/work/dotfiles/ctags/Makefile
-    autocmd BufWrite *.rb !make -f /home/gisen/work/dotfiles/ctags/Makefile
+    autocmd FileType python nnoremap <leader>M :!make -f /home/gisen/work/dotfiles/ctags/Makefile<CR>
 augroup END
+nnoremap <leader>M :!make -f /home/gisen/work/dotfiles/ctags/Makefile<CR>
 
 augroup TagsAutoCmd
     autocmd!
