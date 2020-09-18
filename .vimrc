@@ -259,7 +259,7 @@ Plugin 'Shougo/neosnippet-snippets'
 let g:neosnippet#enable_snipmate_compatibility = 1
 
 " Tell Neosnippet about the other snippets
-let g:neosnippet#snippets_directory='~/.vim/snippets/snipet'
+" let g:neosnippet#snippets_directory='~/.vim/snippets/snipet'
 
 imap <C-k>     <Plug>(neosnippet_expand_or_jump)
 smap <C-k>     <Plug>(neosnippet_expand_or_jump)
@@ -619,6 +619,8 @@ if has('mouse')
         set ttymouse=xterm2
     endif
 endif
+" insert modeから抜ける時nopasteにセット
+autocmd InsertLeave * set nopaste
 
 " vim内のタブ操作
 nnoremap <Leader>m :bp<CR>
@@ -638,5 +640,6 @@ nnoremap <Leader>n :bn<CR>
 function! ImInActivate()
   call system('fcitx-remote -c')
 endfunction
+autocmd InsertLeave :call ImInActibate()<CR>
 inoremap <silent> <C-[> <ESC>:call ImInActivate()<CR>
-inoremap ｊｋ <ESC>:call ImInActivate()<CR>
+inoremap ｊｋ <ESC>
