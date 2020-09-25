@@ -187,6 +187,7 @@ Plugin 'DoxygenToolkit.vim'
 
 " <<<neocomplete and vim-clang setting
 " vim-lsp setting
+Plugin 'SirVer/ultisnips'
 Plugin 'prabirshrestha/async.vim'
 Plugin 'prabirshrestha/asyncomplete.vim'
 Plugin 'prabirshrestha/asyncomplete-lsp.vim'
@@ -259,7 +260,7 @@ Plugin 'Shougo/neosnippet-snippets'
 let g:neosnippet#enable_snipmate_compatibility = 1
 
 " Tell Neosnippet about the other snippets
-let g:neosnippet#snippets_directory='~/.vim/snippets/snipet'
+let g:neosnippet#snippets_directory='~/.vim/snippets/snips'
 
 imap <C-k>     <Plug>(neosnippet_expand_or_jump)
 smap <C-k>     <Plug>(neosnippet_expand_or_jump)
