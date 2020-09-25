@@ -642,4 +642,8 @@ function! ImInActivate()
 endfunction
 autocmd InsertLeave :call ImInActibate()<CR>
 inoremap <silent> <C-[> <ESC>:call ImInActivate()<CR>
-inoremap ｊｋ <ESC>
+inoremap ｊｋ <ESC>:call ImInActivate()<CR>
+inoremap <ESC>oA <Nop>
+inoremap <ESC>oB <Nop>
+inoremap <ESC>oC <Nop>
+inoremap <ESC>oD <Nop>
