@@ -24,7 +24,7 @@
 	sw = switch
 
 [pull]
-	rebase = merges
+	rebase = true
 [commit]
 	template = /home/gisen/Documents/git/.gitmessage.txt
 [fetch]
