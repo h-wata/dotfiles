@@ -1,4 +1,15 @@
-#!/bin/sh
+#!/bin/bash
+
+red=31
+green=32
+yellow=33
+cyan=36
+cecho() {
+    color=$1
+    shift
+    echo -e "\e[${color}m$@\e[m"
+}
+
 add_bashrc() {
   added=$(grep "$1" ~/.bashrc | wc -l)
   if [ $added -gt 0 ]; then
