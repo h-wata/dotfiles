@@ -43,10 +43,10 @@ let g:indentLine_char = '┆'
 " let g:indentLine_conceallevel = 2
 " Python補完 apt-get install python-jedi
 Plugin 'dense-analysis/ale'
-    let g:ale_echo_msg_error_str = 'E'
-    let g:ale_echo_msg_warning_str = 'W'
-    let g:ale_sign_error = 'E'
-    let g:ale_sign_warning = 'W'
+    let g:ale_echo_msg_error_str = ''
+    let g:ale_echo_msg_warning_str = ''
+    let g:ale_sign_error = ''
+    let g:ale_sign_warning = ''
     let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
     let g:ale_statusline_format = ['x %d', '⚠ %d', 'ok']
     let g:ale_lint_on_text_change = 0
@@ -55,6 +55,7 @@ Plugin 'dense-analysis/ale'
     let g:ale_python_flake8_options= '--ignore=F401,W503 --max-line-length=120'
     let g:ale_cpp_cpplint_options= '--linelength=150 --quiet --filter=-whitespace/tab,-whitespace/braces,-legal/copyright'
     let g:ale_c_clangformat_options= '--style=file'
+    let g:ale_textlint_use_global= 1
     let g:ale_python_autopep8_options= '-a -a --max-line-length=100'
     let g:ale_linters = {
       \ 'python' : ['flake8'],
@@ -62,14 +63,13 @@ Plugin 'dense-analysis/ale'
       \ 'xml' : ['xmllint'],
       \ 'javascript': ['eslint'],
       \ 'sh': ['shellcheck'],
+      \ 'markdown': ['textlint'],
       \ }
     let g:ale_fixers= {
-      \ 'javascript': ['prettier'],
+      \ 'javascript': ['standard'],
       \ 'python' : ['autopep8'],
       \ 'cpp' : ['clang-format'],
-      \ 'markdown': [
-      \   {buffer, lines -> {'command': 'textlint -c ~/.config/textlintrc -o /dev/null --fix --no-color --quiet %t', 'read_temporary_file': 1}}
-      \   ],
+      \ 'markdown': ['textlint'],
 	   \}
 	let g:ale_fix_on_save = 0
 " Tree構造を表示するC-e で表示 :help NERDtree参照
@@ -387,7 +387,7 @@ au BufRead,BufNewFile *.md set filetype=markdown
 " plugin from http://vim-scripts.org/vim/scripts.html
 " Plugin 'L9'
 " Git plugin not hosted on GitHub
-Plugin 'git://git.wincent.com/command-t.git'
+" Plugin 'git://git.wincent.com/command-t.git'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
