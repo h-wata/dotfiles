@@ -141,9 +141,9 @@ set splitbelow
 set splitright
 
 " ファイル検索
-Plugin 'iberianpig/ranger-explorer.vim'
-nnoremap <silent><Leader>C :RangerOpenCurrentDir<CR>
-nnoremap <silent><Leader>F :RangerOpenProjectRootDir<CR>
+" Plugin 'iberianpig/ranger-explorer.vim'
+" nnoremap <silent><Leader>C :RangerOpenCurrentDir<CR>
+" nnoremap <silent><Leader>F :RangerOpenProjectRootDir<CR>
 
 " fzf vim setting
 Plugin 'junegunn/fzf'
@@ -306,7 +306,7 @@ endfunction
 " augroup END
 augroup MakeTagsAutoCmd
     autocmd!
-    autocmd FileType python nnoremap <leader>M :!make -f /home/gisen/work/dotfiles/ctags/Makefile<CR>
+    autocmd FileType python nnoremap <leader>M :!make -f /home/gisen/workspace/dotfiles/ctags/Makefile<CR>
 augroup END
 nnoremap <leader>M :!make -f /home/gisen/work/dotfiles/ctags/Makefile<CR>
 
@@ -347,17 +347,17 @@ vnoremap <silent><Space>s :OverCommandLine<CR>s//g<Left><Left>
 nnoremap sub :OverCommandLine<CR>%s/<C-r><C-w>//g<Left><Left>
 
 " Plugin for ROS 
-Plugin 'taketwo/vim-ros'
-let g:ros_make = 'current'
-let g:ros_build_system = 'catkin-tools'
-let g:ros_catkin_make_options = ''
+" Plugin 'taketwo/vim-ros'
+" let g:ros_make = 'current'
+" let g:ros_build_system = 'catkin-tools'
+" let g:ros_catkin_make_options = ''
 " command list
 "   - :A 現在編集してるC++のコードに対応するソースコードorヘッダファイル を自動検索
 "   - :roscd
 "   - :rosed
 " rosのディレクトリをPathに追加
-set path+=/opt/ros/kinetic/share/**
-set path+=~/ros/src/**
+" set path+=/opt/ros/kinetic/share/**
+" set path+=~/ros/src/**
 " gfでlaunchファイル内で検索するときは先頭の/を除く
 autocmd FileType xml :setlocal includeexpr=substitute(v:fname,'^\\/','','')
 
@@ -409,6 +409,8 @@ filetype plugin indent on    " required
 " Plugin 'tsuyoshiwada/slack-memo-vim', {'depends': 'mattn/webapi-vim'}
 " ~/.vimrc.localにTokenを貼り付けること
 
+Plugin 'ferrine/md-img-paste.vim'
+autocmd FileType markdown nmap <buffer><silent> <leader>p :call mdip#MarkdownClipboardImage()<CR>
 " release autogroup in MyAutoCmd
  augroup MyAutoCmd
    autocmd!

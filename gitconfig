@@ -35,4 +35,5 @@
 [init]
 	templatedir = ~/.git_template
 [url "git@github.com:"]
-    insteadOf = https://github.com/
+    InsteadOf = https://github.com/
+    InsteadOf = git@github.com:
