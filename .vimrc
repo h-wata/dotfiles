@@ -43,23 +43,45 @@ let g:indentLine_char = '┆'
 " let g:indentLine_conceallevel = 2
 " Python補完 apt-get install python-jedi
 Plugin 'dense-analysis/ale'
+" roslint cpplintの定義
+ autocmd BufRead *.cpp,*.h,*.hpp call ale#linter#Define('cpp', {
+  \   'name': 'roslint-cpplint',
+  \   'output_stream': 'stderr',
+  \   'executable': '/opt/ros/melodic/lib/roslint/cpplint',
+  \   'command': '%e %s',
+  \   'callback': 'ale#handlers#cpplint#HandleCppLintFormat',
+  \   'lint_file': 1,
+  \})
+" roslint pep8の定義
+ autocmd BufRead *.py call ale#linter#Define('python', {
+  \   'name': 'roslint-pep8',
+  \   'executable': '/opt/ros/melodic/lib/roslint/pep8',
+  \   'command': '%e %s',
+  \   'callback': 'ale_linters#python#flake8#Handle',
+  \   'lint_file': 1,
+  \})
     let g:ale_echo_msg_error_str = ''
     let g:ale_echo_msg_warning_str = ''
     let g:ale_sign_error = ''
     let g:ale_sign_warning = ''
     let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
     let g:ale_statusline_format = ['x %d', '⚠ %d', 'ok']
-    let g:ale_lint_on_text_change = 0
-    let g:ale_lint_on_enter = 1
+    " let g:ale_lint_on_text_change = 'always'
+    " let g:ale_lint_on_insert_leave= 1
+    " let g:ale_lint_on_enter = 0
+    " let g:ale_lint_on_save = 0
+    let g:ale_sign_column_always= 1
     let g:ale_cpp_cpplint_options= '--linelength=150 --quiet --filter=-whitespace/braces,-whitespace/tab'
     let g:ale_python_flake8_options= '--ignore=F401,W503 --max-line-length=120'
     let g:ale_cpp_cpplint_options= '--linelength=150 --quiet --filter=-whitespace/tab,-whitespace/braces,-legal/copyright'
     let g:ale_c_clangformat_options= '--style=file'
+    let g:ale_xmllint_options= ''
     let g:ale_textlint_use_global= 1
     let g:ale_python_autopep8_options= '-a -a --max-line-length=100'
     let g:ale_linters = {
-      \ 'python' : ['flake8'],
-      \ 'cpp' : ['cpplint'],
+      \ 'python' : ['roslint-pep8'],
+      \ 'vim' : ['echo-test'],
+      \ 'cpp' : ['roslint-cpplint'],
       \ 'xml' : ['xmllint'],
       \ 'javascript': ['eslint'],
       \ 'sh': ['shellcheck'],
@@ -68,10 +90,15 @@ Plugin 'dense-analysis/ale'
     let g:ale_fixers= {
       \ 'javascript': ['standard'],
       \ 'python' : ['autopep8'],
+      \ 'xml' : ['xmllint'],
       \ 'cpp' : ['clang-format'],
       \ 'markdown': ['textlint'],
 	   \}
 	let g:ale_fix_on_save = 0
+	let g:ale_set_loclist = 0
+	let g:ale_set_quickfix = 1
+	let g:ale_open_list = 1
+
 " Tree構造を表示するC-e で表示 :help NERDtree参照
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
@@ -81,6 +108,7 @@ nmap ]h <Plug>(GitGutterNextHunk )
 nmap [h <Plug>(GitGutterPrevHunk)
 nmap <Leader>ha <Plug>(GitGutterStageHunk)
 nmap <Leader>hu <Plug>(GitGutterRevertHunk)
+
 " 隠しファイルを表示する
 let NERDTreeShowHidden = 1
 nnoremap <silent><C-e> :NERDTreeFocusToggle<CR>
@@ -128,13 +156,7 @@ let g:lightline.component_type = {
       \ }
 "
 Plugin 'thinca/vim-quickrun'
-Plugin 'ObserverOfTime/coloresque.vim'
-let g:coloresque_whitelist = [
-        \   'css', 'conf', 'config', 'haml', 'html', 'htmldjango',
-        \   'javascript', 'jsx', 'less', 'php',
-        \   'postcss', 'pug', 'qml', 'sass',
-        \   'scss', 'sh', 'stylus', 'svg',
-        \   'typescript', 'vim', 'vue', 'xml']
+Plugin 'gko/vim-coloresque'
 Plugin 'KabbAmine/vCoolor.vim'
 " エディタの分割方向を設定する
 set splitbelow
@@ -212,6 +234,7 @@ function! s:on_lsp_buffer_enabled() abort
   nmap <buffer> K <plug>(lsp-hover)
   inoremap <expr> <cr> pumvisible() ? "\<c-y>\<cr>" : "\<cr>"
 endfunction
+autocmd FileType python let g:lsp_diagnostics_enabled=0
 augroup lsp_install
       au!
         autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
@@ -347,17 +370,16 @@ vnoremap <silent><Space>s :OverCommandLine<CR>s//g<Left><Left>
 nnoremap sub :OverCommandLine<CR>%s/<C-r><C-w>//g<Left><Left>
 
 " Plugin for ROS 
-" Plugin 'taketwo/vim-ros'
-" let g:ros_make = 'current'
-" let g:ros_build_system = 'catkin-tools'
-" let g:ros_catkin_make_options = ''
+Plugin 'taketwo/vim-ros'
+let g:ros_make = 'current'
+let g:ros_catkin_make_options = ''
 " command list
 "   - :A 現在編集してるC++のコードに対応するソースコードorヘッダファイル を自動検索
 "   - :roscd
 "   - :rosed
 " rosのディレクトリをPathに追加
-" set path+=/opt/ros/kinetic/share/**
-" set path+=~/ros/src/**
+set path+=/opt/ros/melodic/share/**
+set path+=~/ros/src/**
 " gfでlaunchファイル内で検索するときは先頭の/を除く
 autocmd FileType xml :setlocal includeexpr=substitute(v:fname,'^\\/','','')
 
@@ -565,7 +587,7 @@ nnoremap <silent> [toggle]w :setl wrap!<CR>:setl wrap?<CR>
 nnoremap <Leader>o :e<CR>
 "ファイル保存
 nnoremap <Leader>w :w<CR>
-" nnoremap <Leader>q :q<CR>
+nnoremap <Leader>q :q<CR>
 
 " make, grep などのコマンド後に自動的にQuickFixを開く
 autocmd MyAutoCmd QuickfixCmdPost make,grep,grepadd,vimgrep copen
