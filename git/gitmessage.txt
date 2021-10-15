@@ -1,7 +1,6 @@
-[fix/add/update/remove](target package)
+fix: target
 
 __Summary__
 * Detail
 * Change files
 * Impact
-* refs #xxx
