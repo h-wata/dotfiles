@@ -90,7 +90,6 @@ nmap ]h <Plug>(GitGutterNextHunk )
 nmap [h <Plug>(GitGutterPrevHunk)
 nmap <Leader>ha <Plug>(GitGutterStageHunk)
 nmap <Leader>hu <Plug>(GitGutterRevertHunk)
-
 " 隠しファイルを表示する
 let NERDTreeShowHidden = 1
 nnoremap <silent><C-e> :NERDTreeFocusToggle<CR>
@@ -233,7 +232,6 @@ function! s:on_lsp_buffer_enabled() abort
   nmap <buffer> K <plug>(lsp-hover)
   inoremap <expr> <cr> pumvisible() ? "\<c-y>\<cr>" : "\<cr>"
 endfunction
-autocmd FileType python let g:lsp_diagnostics_enabled=0
 augroup lsp_install
       au!
         autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
