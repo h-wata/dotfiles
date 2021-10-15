@@ -1,3 +1,4 @@
+set shell=/bin/bash
 set encoding=utf-8
 set fileformats=unix,dos,mac
 set fileencodings=utf-8,sjis,euc-jp,iso-2022-jp
@@ -5,6 +6,8 @@ set relativenumber
 set cursorline
 set nocompatible              " be iMproved, required
 set wildmenu " コマンドモードの補完
+let &t_TI = ""
+let &t_TE = ""
 filetype off                  " required
 
 "Leader キーをspaceに
@@ -42,63 +45,38 @@ Plugin 'Yggdroot/indentLine'
 let g:indentLine_char = '┆'
 " let g:indentLine_conceallevel = 2
 " Python補完 apt-get install python-jedi
-Plugin 'dense-analysis/ale'
-" roslint cpplintの定義
- autocmd BufRead *.cpp,*.h,*.hpp call ale#linter#Define('cpp', {
-  \   'name': 'roslint-cpplint',
-  \   'output_stream': 'stderr',
-  \   'executable': '/opt/ros/melodic/lib/roslint/cpplint',
-  \   'command': '%e %s',
-  \   'callback': 'ale#handlers#cpplint#HandleCppLintFormat',
-  \   'lint_file': 1,
-  \})
-" roslint pep8の定義
- autocmd BufRead *.py call ale#linter#Define('python', {
-  \   'name': 'roslint-pep8',
-  \   'executable': '/opt/ros/melodic/lib/roslint/pep8',
-  \   'command': '%e %s',
-  \   'callback': 'ale_linters#python#flake8#Handle',
-  \   'lint_file': 1,
-  \})
-    let g:ale_echo_msg_error_str = ''
-    let g:ale_echo_msg_warning_str = ''
-    let g:ale_sign_error = ''
-    let g:ale_sign_warning = ''
-    let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-    let g:ale_statusline_format = ['x %d', '⚠ %d', 'ok']
-    " let g:ale_lint_on_text_change = 'always'
-    " let g:ale_lint_on_insert_leave= 1
-    " let g:ale_lint_on_enter = 0
-    " let g:ale_lint_on_save = 0
-    let g:ale_sign_column_always= 1
-    let g:ale_cpp_cpplint_options= '--linelength=150 --quiet --filter=-whitespace/braces,-whitespace/tab'
-    let g:ale_python_flake8_options= '--ignore=F401,W503 --max-line-length=120'
-    let g:ale_cpp_cpplint_options= '--linelength=150 --quiet --filter=-whitespace/tab,-whitespace/braces,-legal/copyright'
-    let g:ale_c_clangformat_options= '--style=file'
-    let g:ale_xmllint_options= ''
-    let g:ale_textlint_use_global= 1
-    let g:ale_python_autopep8_options= '-a -a --max-line-length=100'
-    let g:ale_linters = {
-      \ 'python' : ['roslint-pep8'],
-      \ 'vim' : ['echo-test'],
-      \ 'cpp' : ['roslint-cpplint'],
-      \ 'xml' : ['xmllint'],
-      \ 'javascript': ['eslint'],
-      \ 'sh': ['shellcheck'],
-      \ 'markdown': ['textlint'],
-      \ }
-    let g:ale_fixers= {
-      \ 'javascript': ['standard'],
-      \ 'python' : ['autopep8'],
-      \ 'xml' : ['xmllint'],
-      \ 'cpp' : ['clang-format'],
-      \ 'markdown': ['textlint'],
-	   \}
-	let g:ale_fix_on_save = 0
-	let g:ale_set_loclist = 0
-	let g:ale_set_quickfix = 1
-	let g:ale_open_list = 1
-
+" Plugin 'dense-analysis/ale'
+"     let g:ale_echo_msg_error_str = ''
+"     let g:ale_echo_msg_warning_str = ''
+"     let g:ale_sign_error = ''
+"     let g:ale_sign_warning = ''
+"     let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+"     let g:ale_statusline_format = ['x %d', '⚠ %d', 'ok']
+"     let g:ale_lint_on_text_change = 0
+"     let g:ale_lint_on_enter = 1
+"     let g:ale_cpp_cpplint_options= '--linelength=150 --quiet --filter=-whitespace/braces,-whitespace/tab'
+"     let g:ale_python_flake8_options= '--ignore=F401,W503 --max-line-length=120'
+"     let g:ale_cpp_cpplint_options= '--linelength=150 --quiet --filter=-whitespace/tab,-whitespace/braces,-legal/copyright'
+"     let g:ale_c_clangformat_options= '--style=file'
+"     let g:ale_yaml_yamllint_options= '{extends: default, rules: {line-length: {max: 120}, {document-start: disable}}}'
+"     let g:ale_textlint_use_global= 1
+"     let g:ale_python_autopep8_options= '-a -a --max-line-length=100'
+"     let g:ale_linters = {
+"     \ 'python' : ['flake8'],
+"     \ 'cpp' : ['cpplint'],
+"     \ 'xml' : ['xmllint'],
+"     \ 'javascript': ['eslint'],
+"     \ 'sh': ['shellcheck'],
+"     \ 'markdown': ['textlint'],
+"     \ }
+"     let g:ale_fixers= {
+"     \ 'javascript': ['standard'],
+"     \ 'xml' : ['xmllint'],
+"     \ 'python' : ['autopep8'],
+"     \ 'cpp' : ['clang-format'],
+"     \ 'markdown': ['textlint'],
+"	   \}
+" 	let g:ale_fix_on_save = 0
 " Tree構造を表示するC-e で表示 :help NERDtree参照
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
@@ -115,7 +93,7 @@ nnoremap <silent><C-e> :NERDTreeFocusToggle<CR>
 " デフォルトでツリーを表示させる
 " let g:nerdtree_tabs_open_on_console_startup=1
 " 他のバッファをすべて閉じた時にNERDTreeが開いていたらNERDTreeも一緒に閉じる。
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 " カーソル移動
 Plugin 'easymotion/vim-easymotion'
 " ホームポジションに近いキーを使う
@@ -156,7 +134,15 @@ let g:lightline.component_type = {
       \ }
 "
 Plugin 'thinca/vim-quickrun'
-Plugin 'gko/vim-coloresque'
+" Plugin 'gko/vim-coloresque'
+Plugin 'ObserverOfTime/coloresque.vim'
+let g:coloresque_whitelist = [
+        \   'css', 'conf', 'config', 'haml', 'html', 'htmldjango',
+        \   'javascript', 'jsx', 'less', 'php',
+        \   'postcss', 'pug', 'qml', 'sass',
+        \   'scss', 'sh', 'stylus', 'svg',
+        \   'typescript', 'vim', 'vue', 'xml']
+let g:coloresque_blacklist = []
 Plugin 'KabbAmine/vCoolor.vim'
 " エディタの分割方向を設定する
 set splitbelow
@@ -221,6 +207,15 @@ Plugin 'mattn/vim-lsp-settings'
 Plugin 'thomasfaingnaert/vim-lsp-snippets'
 Plugin 'thomasfaingnaert/vim-lsp-ultisnips'
 
+augroup LspEFM
+  au!
+  autocmd User lsp_setup call lsp#register_server({
+    \ 'name': 'efm-langserver',
+    \ 'cmd': {server_info->['/home/gisen/go/bin/efm-langserver', '-c='.$HOME.'/.config/efm-langserver/config.yaml']},
+    \ 'whitelist': ['yaml', 'xml', 'cmake'],
+    \ })
+augroup END
+
 function! s:on_lsp_buffer_enabled() abort
   setlocal omnifunc=lsp#complete
   setlocal signcolumn=yes
@@ -250,18 +245,23 @@ au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#source
    \ 'completor': function('asyncomplete#sources#neosnippet#completor'),
    \ }))"
 
-let g:lsp_signs_enabled = 0         " enable signs
+let g:lsp_signs_enabled = 1         " enable signs
 let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
 let g:lsp_text_prop_enabled = 1 " 
 
-let g:lsp_signs_error = {'text': '✗'}
-let g:lsp_signs_warning = {'text': '‼'}
+let g:lsp_diagnostics_signs_error = {'text': ''}
+let g:lsp_diagnostics_signs_warning = {'text': ''}
+let g:lsp_diagnostics_signs_hint= {'text': '?'}
+
+let g:lsp_settings = {
+\  'efm-langserver': {'disabled': 0 }
+\}
 
 let g:asyncomplete_completion_delay=200
 let g:asyncomplete_auto_popup=1
 let g:asyncomplete_auto_autocompleteopt=1
 
-autocmd FileType typescript setlocal omnifunc=lsp#complete
+autocmd FileType typescript,python setlocal omnifunc=lsp#complete
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
@@ -712,12 +712,24 @@ nnoremap <Leader>n :bn<CR>
 
 " 日本語入力時にEscを押すと勝手にIMEがOFFになる
 
-function! ImInActivate()
-  call system('fcitx-remote -c')
+set iminsert=0
+set imsearch=0
+set imactivatefunc=ImActivate
+function! ImActivate(active)
+  if a:active
+    call system('fcitx-remote -o')
+  else
+    call system('fcitx-remote -c')
+  endif
 endfunction
-autocmd InsertLeave :call ImInActibate()<CR>
-inoremap <silent> <C-[> <ESC>:call ImInActivate()<CR>
-inoremap ｊｋ <ESC>:call ImInActivate()<CR>
+set imstatusfunc=ImStatus
+function! ImStatus()
+  return system('fcitx-remote')[0] is# '2'
+endfunction
+
+" autocmd InsertLeave :call ImInActibate()<CR>
+" inoremap <silent> <C-[> <ESC>:call ImInActivate()<CR>
+inoremap ｊｋ <ESC>
 inoremap <ESC>oA <Nop>
 inoremap <ESC>oB <Nop>
 inoremap <ESC>oC <Nop>
