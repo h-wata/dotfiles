@@ -28,6 +28,10 @@ Plugin 'tpope/vim-surround'
 " The following are examples of different formats supported.
 " Keep Plugin commands between vundle#begin/end.
 
+Plugin 'alvan/vim-closetag'
+let g:closetag_filetypes = 'html,xhtml,phtml,xml'
+
+
 " 半角/全角変換
 Plugin 'shinchu/hz_ja.vim'
 function! HankakuMd()
