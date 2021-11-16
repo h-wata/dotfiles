@@ -1,5 +1,7 @@
 set shell=/bin/bash
 set encoding=utf-8
+set ff=unix
+" set fileformats=unix,dos,mac
 set fileformats=unix,dos,mac
 set fileencodings=utf-8,sjis,euc-jp,iso-2022-jp
 set relativenumber
@@ -47,41 +49,7 @@ autocmd BufWrite *.md :call HankakuMd()
 " add indent line
 Plugin 'Yggdroot/indentLine'
 let g:indentLine_char = '┆'
-" let g:indentLine_conceallevel = 2
-" Python補完 apt-get install python-jedi
-" Plugin 'dense-analysis/ale'
-"     let g:ale_echo_msg_error_str = ''
-"     let g:ale_echo_msg_warning_str = ''
-"     let g:ale_sign_error = ''
-"     let g:ale_sign_warning = ''
-"     let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-"     let g:ale_statusline_format = ['x %d', '⚠ %d', 'ok']
-"     let g:ale_lint_on_text_change = 0
-"     let g:ale_lint_on_enter = 1
-"     let g:ale_cpp_cpplint_options= '--linelength=150 --quiet --filter=-whitespace/braces,-whitespace/tab'
-"     let g:ale_python_flake8_options= '--ignore=F401,W503 --max-line-length=120'
-"     let g:ale_cpp_cpplint_options= '--linelength=150 --quiet --filter=-whitespace/tab,-whitespace/braces,-legal/copyright'
-"     let g:ale_c_clangformat_options= '--style=file'
-"     let g:ale_yaml_yamllint_options= '{extends: default, rules: {line-length: {max: 120}, {document-start: disable}}}'
-"     let g:ale_textlint_use_global= 1
-"     let g:ale_python_autopep8_options= '-a -a --max-line-length=100'
-"     let g:ale_linters = {
-"     \ 'python' : ['flake8'],
-"     \ 'cpp' : ['cpplint'],
-"     \ 'xml' : ['xmllint'],
-"     \ 'javascript': ['eslint'],
-"     \ 'sh': ['shellcheck'],
-"     \ 'markdown': ['textlint'],
-"     \ }
-"     let g:ale_fixers= {
-"     \ 'javascript': ['standard'],
-"     \ 'xml' : ['xmllint'],
-"     \ 'python' : ['autopep8'],
-"     \ 'cpp' : ['clang-format'],
-"     \ 'markdown': ['textlint'],
-"	   \}
-" 	let g:ale_fix_on_save = 0
-" Tree構造を表示するC-e で表示 :help NERDtree参照
+
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
@@ -105,37 +73,9 @@ let g:EasyMotion_keys='hjklasdfgyuiopqwertnmzxcvbHJKLASDFGYUIOPQWERTNMZXCVB'
 let g:EasyMotion_leader_key="'"
 " 1 ストローク選択を優先する
 let g:EasyMotion_grouping=1
-nmap 's <Plug>(easymotion-s2)
+nmap <Leader>f <Plug>(easymotion-s2)
 
-" インターフェイス変更
-" airlineが重いのでlightlineを使う
-Plugin 'itchyny/lightline.vim'
-let g:lightline = {
-\'active': {
-\  'left': [
-\    ['mode', 'paste'],
-\    ['gitbranch', 'readonly', 'filename', 'modified'],
-\    [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ] ],
-\ },
-\ 'component_function':{
-\   'gitbranch': 'fugitive#head'
-\ },
-\ }
 
-Plugin 'maximbaz/lightline-ale'
-let g:lightline.component_expand = {
-      \  'linter_checking': 'lightline#ale#checking',
-      \  'linter_warnings': 'lightline#ale#warnings',
-      \  'linter_errors': 'lightline#ale#errors',
-      \  'linter_ok': 'lightline#ale#ok',
-      \ }
-let g:lightline.component_type = {
-      \     'linter_checking': 'left',
-      \     'linter_warnings': 'warning',
-      \     'linter_errors': 'error',
-      \     'linter_ok': 'left',
-      \ }
-"
 Plugin 'thinca/vim-quickrun'
 " Plugin 'gko/vim-coloresque'
 Plugin 'ObserverOfTime/coloresque.vim'
@@ -196,7 +136,6 @@ vmap <Leader>c <Plug>(caw:hatpos:toggle)
 " 関数前で:Doxとうつと自動でコメント挿入
 Plugin 'DoxygenToolkit.vim'
 
-" <<<neocomplete and vim-clang setting
 " vim-lsp setting
 Plugin 'SirVer/ultisnips'
 Plugin 'prabirshrestha/async.vim'
@@ -215,9 +154,10 @@ augroup LspEFM
   autocmd User lsp_setup call lsp#register_server({
     \ 'name': 'efm-langserver',
     \ 'cmd': {server_info->['/home/gisen/go/bin/efm-langserver', '-c='.$HOME.'/.config/efm-langserver/config.yaml']},
-    \ 'whitelist': ['yaml', 'xml', 'cmake'],
+    \ 'whitelist': ['yaml', 'xml', 'cmake', 'markdown', 'sh', 'roslaunch.xml'],
     \ })
 augroup END
+autocmd BufWritePre CMakeLists.txt,*.xml,*.launch call execute('LspDocumentFormatSync --server=efm-langserver')
 
 function! s:on_lsp_buffer_enabled() abort
   setlocal omnifunc=lsp#complete
@@ -248,6 +188,7 @@ au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#source
    \ }))"
 
 let g:lsp_signs_enabled = 1         " enable signs
+let g:lsp_diagnostics_enabled = v:true
 let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
 let g:lsp_text_prop_enabled = 1 " 
 
@@ -272,6 +213,56 @@ inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
 let g:lsp_log_verbose = 1
 let g:lsp_log_file = expand('~/vim-lsp.log')
 let g:asyncomplete_log_file = expand('~/asyncomplete.log')
+
+" インターフェイス変更
+" airlineが重いのでlightlineを使う
+Plugin 'itchyny/lightline.vim'
+Plugin 'popkirby/lightline-iceberg'
+
+function! LightlineLSPWarnings() abort
+  let l:counts = lsp#get_buffer_diagnostics_counts()
+  return l:counts.warning == 0 ? '' : printf('W:%d', l:counts.warning)
+endfunction
+
+function! LightlineLSPErrors() abort
+  let l:counts = lsp#get_buffer_diagnostics_counts()
+  return l:counts.error == 0 ? '' : printf('E:%d', l:counts.error)
+endfunction
+
+function! LightlineLSPOk() abort
+  let l:counts =  lsp#get_buffer_diagnostics_counts()
+  let l:total = l:counts.error + l:counts.warning
+  return l:total == 0 ? 'OK' : ''
+endfunction
+
+augroup LightLineOnLSP
+  autocmd!
+  autocmd User lsp_diagnostics_updated call lightline#update()
+augroup END
+
+let g:lightline = {
+\'colorscheme': 'Tomorrow_Night',
+\'active': {
+\  'left': [
+\    ['mode', 'paste'], 
+\    ['lsp_errors', 'lsp_warnings', 'lsp_ok' ],
+\    ['gitbranch', 'readonly', 'filename', 'modified']
+\     ],
+\ },
+\ 'component_function':{
+\   'gitbranch': 'fugitive#head'
+\ },
+\ 'component_expand':{
+\   'lsp_warnings': 'LightlineLSPWarnings',
+\   'lsp_errors': 'LightlineLSPErrors',
+\   'lsp_ok': 'LightlineLSPOk',
+\ },
+\ 'component_type':{
+\   'lsp_warnings': 'warning',
+\   'lsp_errors': 'error',
+\   'lsp_ok': 'middle',
+\ },
+\ }
 
 Plugin 'Shougo/deoplete.nvim'
 if !has('nvim')
@@ -385,6 +376,8 @@ set path+=~/ros/src/**
 " gfでlaunchファイル内で検索するときは先頭の/を除く
 autocmd FileType xml :setlocal includeexpr=substitute(v:fname,'^\\/','','')
 
+Plugin 'alvan/vim-closetag'
+let g:closetag_filenames = '*.html,*.xml,*.launch,*.php,*.vue'
 " Plugin for git 
 Plugin 'tpope/vim-fugitive'
 " :Gdiff opened as vertical
@@ -420,15 +413,6 @@ filetype plugin indent on    " required
 " To ignore plugin indent changes, instead use:
 "filetype plugin on
 "
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just
-":PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
 
 " Plugin 'mattn/webapi-vim'
 " Plugin 'tsuyoshiwada/slack-memo-vim', {'depends': 'mattn/webapi-vim'}
@@ -705,29 +689,22 @@ nnoremap <Leader>n :bn<CR>
 
 "filetype plugin indent on
 "
-" 入力モードでのカーソル移動
-" inoremap <C-> <BS>
-" inoremap <C-j> <Down>
-" inoremap <C-k> <Up>
-" inoremap <C-h> <Left>
-" inoremap <C-l> <Right>
-
 " 日本語入力時にEscを押すと勝手にIMEがOFFになる
 
 set iminsert=0
 set imsearch=0
 set imactivatefunc=ImActivate
-function! ImActivate(active)
-  if a:active
-    call system('fcitx-remote -o')
-  else
-    call system('fcitx-remote -c')
-  endif
-endfunction
-set imstatusfunc=ImStatus
-function! ImStatus()
-  return system('fcitx-remote')[0] is# '2'
-endfunction
+" function! ImActivate(active)
+"   if a:active
+"     call system('fcitx-remote -o')
+"   else
+"     call system('fcitx-remote -c')
+"   endif
+" endfunction
+" set imstatusfunc=ImStatus
+" function! ImStatus()
+"   return system('fcitx-remote')[0] is# '2'
+" endfunction
 
 " autocmd InsertLeave :call ImInActibate()<CR>
 " inoremap <silent> <C-[> <ESC>:call ImInActivate()<CR>

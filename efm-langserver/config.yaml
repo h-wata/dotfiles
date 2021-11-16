@@ -8,12 +8,21 @@ tools:
     lint-command: "yamllint -f parsable ${INPUT}"
     lint-stdin: true
   xmllint: &xmllint
-    lint-command: "xmllint --noout --valid ${INPUT}"
+    lint-command: "xmllint --noout --schema http://download.ros.org/schema/package_format2.xsd --valid ${INPUT}"
     lint-stdin: true
+  xmllint: &xmlformat
+    format-command: "xmllint --format --schema http://download.ros.org/schema/package_format2.xsd ${INPUT}"
+    format-stdin: true
+  roslaunchlint: &roslaunchlint
+    lint-command: "xmllint --noout --schema /home/gisen/.config/xmllint/roslaunch.xsd --valid ${INPUT}"
+    lint-stdin: true
+  roslaunchformat: &roslaunchformat
+    format-command: "xmllint --format --schema /home/gisen/.config/xmllint/roslaunch.xsd -"
+    format-stdin: true
   cmakeformat: &cmakeformat
-    # lint-command: "cmake-format -c $HOME/.config/.cmake-format ${INPUT}"
-    lint-command: "cmake-lint ${INPUT} -c $HOME/.config/.cmake-format"
-    lint-stdin: true
+    format-command: "/home/gisen/.local/bin/cmake-format -c /home/gisen/.config/.cmake-format -l error ${INPUT}"
+    format-stdin: true
+
   python-flake8: &python-flake8
     lint-command: "flake8 --ignore=F401,W503 --max-line-length 119 --stdin-display-name ${INPUT} -"
     lint-stdin: true
@@ -24,12 +33,43 @@ tools:
     lint-stdin: true
     lint-formats:
       - "%f:%l:%c: %m"
+  markdown-textlint: &markdown-textlint
+    lint-command: 'npx --no-install textlint -f unix --stdin --stdin-filename ${INPUT}'
+    lint-ignore-exit-code: true
+    lint-stdin: true
+    lint-formats:
+      - '%f:%l:%c: %m [%trror/%r]'
+    root-markers:
+      - .textlintrc
+  markdown-markdownlint: &markdown-markdownlint
+    lint-command: 'markdownlint -s -c %HOME%/.markdownlintrc'
+    lint-stdin: true
+    lint-formats:
+      - '%f:%l %m'
+      - '%f:%l:%c %m'
+      - '%f: %l: %m'
+
+  sh-shellcheck: &sh-shellcheck
+    lint-command: 'shellcheck -f gcc -x'
+    lint-source: 'shellcheck'
+    lint-formats:
+      - '%f:%l:%c: %trror: %m'
+      - '%f:%l:%c: %tarning: %m'
+      - '%f:%l:%c: %tote: %m'
+
+  sh-shfmt: &sh-shfmt
+    format-command: '/home/gisen/go/bin/shfmt -i 2 -ci -s -bn'
+    format-stdin: true
 
 languages:
   yaml:
     - <<: *yaml-yamllint
   xml:
     - <<: *xmllint
+    - <<: *xmlformat
+  roslaunch.xml:
+    - <<: *roslaunchlint
+    - <<: *roslaunchformat
   cmake:
     - <<: *cmakeformat
   python:
@@ -41,3 +81,10 @@ languages:
     # - <<: *python-isort
   vim:
     - <<: *vim-vint
+  markdown:
+    - <<: *markdown-textlint
+    - <<: *markdown-markdownlint
+  sh:
+    - <<: *sh-shellcheck
+    - <<: *sh-shfmt
+
