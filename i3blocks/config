@@ -1,8 +1,14 @@
 [ytdl-mpv]
-command=~/work/i3blocks-contrib/ytdl-mpv/ytdl-mpv
+command=$SCRIPT_DIR/ytdl-mpv/ytdl-mpv
 markup=pango
 interval=once
 signal=4
+
+[github]
+command=$SCRIPT_DIR/github/github
+interval=1
+format=json
+markup=pango
 
 [uptime]
 label= 
@@ -16,14 +22,20 @@ command=hostname -I | awk '{ print "IP:" $1 }'
 interval=5
 color=#91E78B
 
+[nm-vpn]
+command=$SCRIPT_DIR/nm-vpn/nm-vpn
+#init_color=#FFFF00
+#on_color=#00FF00
+label=VPN: 
+interval=5
+
 [bandwidth]
-command=~/work/i3blocks-contrib/bandwidth2/bandwidth2 
+command=$SCRIPT_DIR/bandwidth2/bandwidth2 
 interval=persist
 markup=pango
 label=
 color=#83A26D
 #INTERFACE=(checks all interfaces)
-
 
 [disk]
 label=
@@ -39,9 +51,18 @@ color=#B38F8F
 interval=1
 
 [cpu_usage2]
-command=~/work/i3blocks-contrib/cpu_usage2/cpu_usage2
+command=$SCRIPT_DIR/cpu_usage2/cpu_usage2
 markup=pango
 interval=persist
+
+[gpu-load]
+command=$SCRIPT_DIR/gpu-load/gpu-load
+label=GPU
+interval=10
+#min_width=GPU 100% 100% 100% 100%
+#GPU_BRAND=NVIDIA // or AMD
+#T_WARN=70
+#T_CRIT=90
 
 [load average]
 label=
@@ -65,7 +86,7 @@ signal=2
 [volume]
 # label= 
 # command=~/.config/i3blocks/volume.sh
-command=~/work/i3blocks-contrib/volume-pulseaudio/volume-pulseaudio
+command=$SCRIPT_DIR/volume-pulseaudio/volume-pulseaudio
 interval=once
 signal=1
 color=#94C3C9
