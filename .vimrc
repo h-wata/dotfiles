@@ -15,13 +15,12 @@ filetype off                  " required
 "Leader キーをspaceに
 let mapleader = "\<Space>"
 let g:termdebug_wide= 163
-
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 set rtp+=~/.vim/runtime/
 call vundle#begin()
 " alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
+" call vundle#begin('~/some/path/here')
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
@@ -44,16 +43,10 @@ autocmd BufWrite *.md :call HankakuMd()
 " ----For Python editor----
 " add indent line
 Plugin 'Yggdroot/indentLine'
-let g:indentLine_char = '┆'
-
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'airblade/vim-gitgutter'
-nmap ]h <Plug>(GitGutterNextHunk )
-nmap [h <Plug>(GitGutterPrevHunk)
-nmap <Leader>ha <Plug>(GitGutterStageHunk)
-nmap <Leader>hu <Plug>(GitGutterRevertHunk)
 " 隠しファイルを表示する
 let NERDTreeShowHidden = 1
 nnoremap <silent><C-e> :NERDTreeFocusToggle<CR>
@@ -63,55 +56,17 @@ nnoremap <silent><C-e> :NERDTreeFocusToggle<CR>
 " autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 " カーソル移動
 Plugin 'easymotion/vim-easymotion'
-" ホームポジションに近いキーを使う
-let g:EasyMotion_keys='hjklasdfgyuiopqwertnmzxcvbHJKLASDFGYUIOPQWERTNMZXCVB'
-" 「'」 + 何かにマッピング
-let g:EasyMotion_leader_key="'"
-" 1 ストローク選択を優先する
-let g:EasyMotion_grouping=1
-nmap <Leader>f <Plug>(easymotion-s2)
-
-
-Plugin 'thinca/vim-quickrun'
-" Plugin 'gko/vim-coloresque'
-Plugin 'ObserverOfTime/coloresque.vim'
-let g:coloresque_whitelist = [
-        \   'css', 'conf', 'config', 'haml', 'html', 'htmldjango',
-        \   'javascript', 'jsx', 'less', 'php',
-        \   'postcss', 'pug', 'qml', 'sass',
-        \   'scss', 'sh', 'stylus', 'svg',
-        \   'typescript', 'vim', 'vue', 'xml']
-let g:coloresque_blacklist = []
 Plugin 'KabbAmine/vCoolor.vim'
 " エディタの分割方向を設定する
 set splitbelow
 set splitright
 
-" ファイル検索
-" Plugin 'iberianpig/ranger-explorer.vim'
-" nnoremap <silent><Leader>C :RangerOpenCurrentDir<CR>
-" nnoremap <silent><Leader>F :RangerOpenProjectRootDir<CR>
-
 " fzf vim setting
 Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
-nnoremap <silent> ,f :GFiles<CR>
-nnoremap <silent> ,F :Files<CR>
-nnoremap <silent> ,b :Buffers<CR>
-nnoremap <silent> ,l :BLines<CR>
-nnoremap <silent> ,h :History<CR>
-nnoremap <silent> ,m :Mark<CR>
-
-" Path completion with custom source command
-inoremap <expr> <c-x><c-f> fzf#vim#complete#path('fd')
-inoremap <expr> <c-x><c-f> fzf#vim#complete#path('rg --files')
-
-" Word completion with custom spec with popup layout option
-inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'window': { 'width': 0.2, 'height': 0.9, 'xoffset': 1 }})
-inoremap <expr> <c-x><c-l> fzf#vim#complete#line({'window': { 'width': 1, 'height': 0.6, 'xoffset': 0.2 }})
-
 " url開く
 Plugin 'tyru/open-browser.vim'
+
 " カーソル下のURLや単語をブラウザで開く
 nmap <Leader>b <Plug>(openbrowser-smart-search)
 vmap <Leader>b <Plug>(openbrowser-smart-search)
@@ -145,121 +100,10 @@ Plugin 'mattn/vim-lsp-settings'
 Plugin 'thomasfaingnaert/vim-lsp-snippets'
 Plugin 'thomasfaingnaert/vim-lsp-ultisnips'
 
-augroup LspEFM
-  au!
-  autocmd User lsp_setup call lsp#register_server({
-    \ 'name': 'efm-langserver',
-    \ 'cmd': {server_info->['/home/gisen/go/bin/efm-langserver', '-c='.$HOME.'/.config/efm-langserver/config.yaml']},
-    \ 'whitelist': ['yaml', 'xml', 'cmake', 'markdown', 'sh', 'roslaunch.xml'],
-    \ })
-augroup END
-autocmd BufWritePre CMakeLists.txt,*.xml,*.launch call execute('LspDocumentFormatSync --server=efm-langserver')
-
-function! s:on_lsp_buffer_enabled() abort
-  setlocal omnifunc=lsp#complete
-  setlocal signcolumn=yes
-  nmap <buffer> gd <plug>(lsp-definition)
-  nmap <buffer> gr <plug>(lsp-references)
-  nmap <buffer> gi <plug>(lsp-implementation)
-  nmap <buffer> gt <plug>(lsp-type-definition)
-  nmap <buffer> <leader>rn <plug>(lsp-rename)
-  nmap <buffer> [g <Plug>(lsp-previous-diagnostic)
-  nmap <buffer> ]g <Plug>(lsp-next-diagnostic)
-  nmap <buffer> K <plug>(lsp-hover)
-  inoremap <expr> <cr> pumvisible() ? "\<c-y>\<cr>" : "\<cr>"
-endfunction
-augroup lsp_install
-      au!
-        autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
-augroup END
-command! LspDebug let lsp_log_verbose=1 | let lsp_log_file = expand('~/lsp.log')
-" clangd, cqueryはプロジェクトのcompile_commands.jsonを読んで補完を行うので
-" cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ONのオプションでビルドし、
-" project root dirにjsonを貼る必要がある
-set completeopt+=menuone
-au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#neosnippet#get_source_options({
-   \ 'name': 'neosnippet',
-   \ 'whitelist': ['*'],
-   \ 'completor': function('asyncomplete#sources#neosnippet#completor'),
-   \ }))"
-
-let g:lsp_signs_enabled = 1         " enable signs
-let g:lsp_diagnostics_enabled = v:true
-let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
-let g:lsp_text_prop_enabled = 1 " 
-
-let g:lsp_diagnostics_signs_error = {'text': ''}
-let g:lsp_diagnostics_signs_warning = {'text': ''}
-let g:lsp_diagnostics_signs_hint= {'text': '?'}
-
-let g:lsp_settings = {
-\  'efm-langserver': {'disabled': 0 }
-\}
-
-let g:asyncomplete_completion_delay=200
-let g:asyncomplete_auto_popup=1
-let g:asyncomplete_auto_autocompleteopt=1
-
-autocmd FileType typescript,python setlocal omnifunc=lsp#complete
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
-
-" for debug
-let g:lsp_log_verbose = 1
-let g:lsp_log_file = expand('~/vim-lsp.log')
-let g:asyncomplete_log_file = expand('~/asyncomplete.log')
-
 " インターフェイス変更
 " airlineが重いのでlightlineを使う
 Plugin 'itchyny/lightline.vim'
 Plugin 'popkirby/lightline-iceberg'
-
-function! LightlineLSPWarnings() abort
-  let l:counts = lsp#get_buffer_diagnostics_counts()
-  return l:counts.warning == 0 ? '' : printf('W:%d', l:counts.warning)
-endfunction
-
-function! LightlineLSPErrors() abort
-  let l:counts = lsp#get_buffer_diagnostics_counts()
-  return l:counts.error == 0 ? '' : printf('E:%d', l:counts.error)
-endfunction
-
-function! LightlineLSPOk() abort
-  let l:counts =  lsp#get_buffer_diagnostics_counts()
-  let l:total = l:counts.error + l:counts.warning
-  return l:total == 0 ? 'OK' : ''
-endfunction
-
-augroup LightLineOnLSP
-  autocmd!
-  autocmd User lsp_diagnostics_updated call lightline#update()
-augroup END
-
-let g:lightline = {
-\'colorscheme': 'Tomorrow_Night',
-\'active': {
-\  'left': [
-\    ['mode', 'paste'], 
-\    ['lsp_errors', 'lsp_warnings', 'lsp_ok' ],
-\    ['gitbranch', 'readonly', 'filename', 'modified']
-\     ],
-\ },
-\ 'component_function':{
-\   'gitbranch': 'fugitive#head'
-\ },
-\ 'component_expand':{
-\   'lsp_warnings': 'LightlineLSPWarnings',
-\   'lsp_errors': 'LightlineLSPErrors',
-\   'lsp_ok': 'LightlineLSPOk',
-\ },
-\ 'component_type':{
-\   'lsp_warnings': 'warning',
-\   'lsp_errors': 'error',
-\   'lsp_ok': 'middle',
-\ },
-\ }
-
 Plugin 'Shougo/deoplete.nvim'
 if !has('nvim')
   Plugin 'roxma/nvim-yarp'
@@ -267,30 +111,6 @@ if !has('nvim')
 endif
 
 Plugin 'Shougo/neosnippet-snippets'
-
-" Enable snipMate compatibility feature.
-let g:neosnippet#enable_snipmate_compatibility = 1
-
-" Tell Neosnippet about the other snippets
-let g:neosnippet#snippets_directory='~/.vim/snippets/snips'
-
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
-
-" SuperTab like snippets behavior.
-" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
-"imap <expr><TAB>
-" \ pumvisible() ? "\<C-n>" :
-" \ neosnippet#expandable_or_jumpable() ?
-" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-
-" For conceal markers.
-if has('conceal')
-  set conceallevel=2 concealcursor=niv
-endif
 
 " ctags setting>>>
 " ファイルタイプ毎 & gitリポジトリ毎にtagsの読み込みpathを変える
@@ -362,10 +182,6 @@ nnoremap sub :OverCommandLine<CR>%s/<C-r><C-w>//g<Left><Left>
 Plugin 'taketwo/vim-ros'
 let g:ros_make = 'current'
 let g:ros_catkin_make_options = ''
-" command list
-"   - :A 現在編集してるC++のコードに対応するソースコードorヘッダファイル を自動検索
-"   - :roscd
-"   - :rosed
 " rosのディレクトリをPathに追加
 set path+=/opt/ros/melodic/share/**
 set path+=~/ros/src/**
@@ -376,15 +192,6 @@ Plugin 'alvan/vim-closetag'
 let g:closetag_filenames = '*.html,*.xml,*.launch,*.php,*.vue'
 " Plugin for git 
 Plugin 'tpope/vim-fugitive'
-" :Gdiff opened as vertical
-set diffopt+=vertical
-" Statuslineの設定
-set laststatus=2
-" set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ \[ENC=%{&fileencoding}]%{ALEGetStatusLine()}%P
-nnoremap <leader>gd :Gvdiffsplit!<CR>
-nnoremap gdh :diffget //2<CR>
-nnoremap gdl :diffget //3<CR>
-
 Plugin 'godlygeek/tabular'
 " For Markdown
 Plugin 'plasticboy/vim-markdown'
@@ -423,53 +230,6 @@ autocmd FileType markdown nmap <buffer><silent> <leader>p :call mdip#MarkdownCli
 
 " ref https://zenn.dev/kouta/articles/87947515bff4da
 Plugin 'tyru/eskk.vim'
-let g:eskk#directory = "~/.config/eskk"
-let g:eskk#large_dictionary = {'path': "~/.config/eskk/SKK-JISYO.L", 'sorted': 1, 'encoding': 'euc-jp',}
-
-let g:eskk#kakutei_when_unique_candidate = 1 "漢字変換した時に候補が1つの場合、自動的に確定する
-let g:eskk#enable_completion = 0             "neocompleteを入れないと、1にすると動作しなくなるため0推奨
-let g:eskk#no_default_mappings = 1           "デフォルトのマッピングを削除
-let g:eskk#keep_state = 0                    "ノーマルモードに戻るとeskkモードを初期値にする
-let g:eskk#egg_like_newline = 1              "漢字変換を確定しても改行しない。
-
-"表示文字を変更(オレ サンカクデ ハンダン デキナイ)
-let g:eskk#marker_henkan = "[変換]"
-let g:eskk#marker_henkan_select = "[選択]"
-let g:eskk#marker_okuri = "[送り]"
-let g:eskk#marker_jisyo_touroku = "[辞書]"
-
-augroup vimrc_eskk
-  autocmd!
-  "markdownは日本語を打つ前提
-  autocmd InsertEnter * call s:markdown_eskk()
-  autocmd Filetype markdown nnoremap <buffer><silent> <F1> :call <SID>markdown_eskk_toggle()<CR>
-augroup END
-
-let g:toggle_markdown_eskk = 1
-function! s:markdown_eskk() abort
-  if &filetype == 'markdown' && g:toggle_markdown_eskk ==# 1
-    call eskk#enable()
-  endif
-endfunction
-
-function! s:markdown_eskk_toggle() abort
-  let g:toggle_markdown_eskk = g:toggle_markdown_eskk == 1 ? 0 : 1
-  if g:toggle_markdown_eskk ==# 1
-    echomsg 'Markdown日本語入力モードON'
-  else
-    echomsg 'Markdown日本語入力モードOFF'
-  endif
-endfunction
-
-augroup vimrc_eskk
-  autocmd!
-  autocmd User eskk-enable-post lmap <buffer> l <Plug>(eskk:disable)
-augroup END
-
-imap jj <Plug>(eskk:toggle)
-cmap jj <Plug>(eskk:toggle)
-
-
 syntax enable
 " カラースキーム設定、お好きにどうぞ
 set background=dark
@@ -562,7 +322,6 @@ set t_vb=
 set novisualbell
 
 " デフォルト不可視文字は美しくないのでUnicodeで綺麗に
-
 "set listchars=tab:>-,trail:-,extends:>>,precedes:<<,nbsp:%,eol:~
 set listchars=tab:>-,nbsp:%,eol:~,trail:-,space:.
 "マクロ及びキー設定
@@ -614,6 +373,7 @@ nnoremap <silent> [toggle]s :setl spell!<CR>:setl spell?<CR>
 nnoremap <silent> [toggle]l :setl list!<CR>:setl list?<CR>
 nnoremap <silent> [toggle]t :setl expandtab!<CR>:setl expandtab?<CR>
 nnoremap <silent> [toggle]w :setl wrap!<CR>:setl wrap?<CR>
+nnoremap <silent> [toggle]p :setl paste!<CR>:setl paste?<CR>
 " "Leader キーをspaceに
 "Space+oでnew file
 nnoremap <Leader>o :e<CR>
@@ -690,22 +450,19 @@ nnoremap <Leader>n :bn<CR>
 set iminsert=0
 set imsearch=0
 set imactivatefunc=ImActivate
-" function! ImActivate(active)
-"   if a:active
-"     call system('fcitx-remote -o')
-"   else
-"     call system('fcitx-remote -c')
-"   endif
-" endfunction
-" set imstatusfunc=ImStatus
-" function! ImStatus()
-"   return system('fcitx-remote')[0] is# '2'
-" endfunction
-
-" autocmd InsertLeave :call ImInActibate()<CR>
-" inoremap <silent> <C-[> <ESC>:call ImInActivate()<CR>
 inoremap ｊｋ <ESC>
 inoremap <ESC>oA <Nop>
 inoremap <ESC>oB <Nop>
 inoremap <ESC>oC <Nop>
 inoremap <ESC>oD <Nop>
+
+" vundle#Bundlesから、match関数を使ってpuginの名前を検索。
+" dirを返す。
+let s:plugs = get(s:, 'plugs', get(g:, 'vundle#bundles', {}))
+function! FindPlugin(name) abort
+  let l:plug = s:plugs[match(s:plugs, a:name)]
+  return match(s:plugs, a:name) >= 0 ? isdirectory(l:plug["rtpath"]) : 0
+endfunction
+command! -nargs=1 UsePlugin if !FindPlugin(<args>) | finish | endif
+
+runtime! _config/*.vim

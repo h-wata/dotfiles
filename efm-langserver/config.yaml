@@ -5,13 +5,13 @@ root-markers:
   - .git/
 tools:
   yaml-yamllint: &yaml-yamllint
-    lint-command: "yamllint -f parsable ${INPUT}"
+    lint-command: "yamllint -f -s parsable -"
     lint-stdin: true
   xmllint: &xmllint
     lint-command: "xmllint --noout --schema http://download.ros.org/schema/package_format2.xsd --valid ${INPUT}"
     lint-stdin: true
   xmllint: &xmlformat
-    format-command: "xmllint --format --schema http://download.ros.org/schema/package_format2.xsd ${INPUT}"
+    format-command: "xmllint --format --schema http://download.ros.org/schema/package_format2.xsd -"
     format-stdin: true
   roslaunchlint: &roslaunchlint
     lint-command: "xmllint --noout --schema /home/gisen/.config/xmllint/roslaunch.xsd --valid ${INPUT}"
@@ -20,7 +20,7 @@ tools:
     format-command: "xmllint --format --schema /home/gisen/.config/xmllint/roslaunch.xsd -"
     format-stdin: true
   cmakeformat: &cmakeformat
-    format-command: "/home/gisen/.local/bin/cmake-format -c /home/gisen/.config/.cmake-format -l error ${INPUT}"
+    format-command: "/home/gisen/.local/bin/cmake-format -c /home/gisen/.config/.cmake-format -l error -"
     format-stdin: true
 
   python-flake8: &python-flake8
@@ -34,7 +34,7 @@ tools:
     lint-formats:
       - "%f:%l:%c: %m"
   markdown-textlint: &markdown-textlint
-    lint-command: 'npx --no-install textlint -f unix --stdin --stdin-filename ${INPUT}'
+    lint-command: 'npx --no-install textlint -f unix --stdin --stdin-filename -'
     lint-ignore-exit-code: true
     lint-stdin: true
     lint-formats:
