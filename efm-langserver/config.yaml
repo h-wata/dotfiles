@@ -5,16 +5,16 @@ root-markers:
   - .git/
 tools:
   yaml-yamllint: &yaml-yamllint
-    lint-command: "yamllint -f -s parsable -"
+    lint-command: "yamllint -s -f parsable -"
     lint-stdin: true
   xmllint: &xmllint
-    lint-command: "xmllint --noout --schema http://download.ros.org/schema/package_format2.xsd --valid ${INPUT}"
+    lint-command: "xmllint --noout --schema /home/gisen/.config/xmllint/package.format2.xsd --valid -"
     lint-stdin: true
-  xmllint: &xmlformat
-    format-command: "xmllint --format --schema http://download.ros.org/schema/package_format2.xsd -"
+  xmlformat: &xmlformat
+    format-command: "xmllint --format --schema /home/gisen/.config/xmllint/package.format2.xsd -"
     format-stdin: true
   roslaunchlint: &roslaunchlint
-    lint-command: "xmllint --noout --schema /home/gisen/.config/xmllint/roslaunch.xsd --valid ${INPUT}"
+    lint-command: "xmllint --noout --schema /home/gisen/.config/xmllint/roslaunch.xsd --valid -"
     lint-stdin: true
   roslaunchformat: &roslaunchformat
     format-command: "xmllint --format --schema /home/gisen/.config/xmllint/roslaunch.xsd -"
@@ -24,10 +24,26 @@ tools:
     format-stdin: true
 
   python-flake8: &python-flake8
-    lint-command: "flake8 --ignore=F401,W503 --max-line-length 119 --stdin-display-name ${INPUT} -"
+    lint-command: "flake8 --config -"
     lint-stdin: true
     lint-formats:
       - "%f:%l:%c: %m"
+
+  python-mypy: &python-mypy
+    lint-command: 'mypy --show-column-numbers'
+    lint-formats:
+      - '%f:%l:%c: %trror: %m'
+      - '%f:%l:%c: %tarning: %m'
+      - '%f:%l:%c: %tote: %m'
+
+  python-autopep8: &python-autopep8
+    format-command: 'autopep8 -'
+    format-stdin: true
+
+  python-isort: &python-isort
+    format-command: 'isort --quiet -'
+    format-stdin: true
+
   vim-vint: &vim-vint
     lint-command: "vint ${INPUT}"
     lint-stdin: true
@@ -75,10 +91,10 @@ languages:
   python:
     - <<: *python-flake8
     # - <<: *python-mypy
-    # - <<: *python-autopep8
+    - <<: *python-autopep8
+    - <<: *python-isort
     # - <<: *python-yapf
     # - <<: *python-black
-    # - <<: *python-isort
   vim:
     - <<: *vim-vint
   markdown:
