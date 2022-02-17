@@ -8,6 +8,7 @@ set relativenumber
 set cursorline
 set nocompatible              " be iMproved, required
 set wildmenu " コマンドモードの補完
+set wildoptions=pum 
 let &t_TI = ""
 let &t_TE = ""
 filetype off                  " required
@@ -23,6 +24,10 @@ call vundle#begin()
 " call vundle#begin('~/some/path/here')
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
+Plugin 'mattn/vim-sonictemplate'
+let g:sonictemplate_vim_template_dir = [
+      \ '~/workspace/my-template/template'
+      \]
 
 " vim-surround
 Plugin 'tpope/vim-surround'
@@ -55,8 +60,22 @@ nnoremap <silent><C-e> :NERDTreeFocusToggle<CR>
 " 他のバッファをすべて閉じた時にNERDTreeが開いていたらNERDTreeも一緒に閉じる。
 " autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 " カーソル移動
-Plugin 'easymotion/vim-easymotion'
+" Plugin 'easymotion/vim-easymotion'
+" fzf easymotion
+Plugin 'yuki-yano/fuzzy-motion.vim'
+nmap <Leader>f :FuzzyMotion<CR>
 Plugin 'KabbAmine/vCoolor.vim'
+Plugin 'thinca/vim-quickrun'
+" Plugin 'gko/vim-coloresque'
+Plugin 'ObserverOfTime/coloresque.vim'
+let g:coloresque_whitelist = [
+        \   'css', 'conf', 'config', 'haml', 'html', 'htmldjango',
+        \   'javascript', 'jsx', 'less', 'php',
+        \   'postcss', 'pug', 'qml', 'sass',
+        \   'scss', 'sh', 'stylus', 'svg',
+        \   'typescript', 'vim', 'vue', 'xml']
+let g:coloresque_blacklist = []
+
 " エディタの分割方向を設定する
 set splitbelow
 set splitright
@@ -94,6 +113,7 @@ Plugin 'prabirshrestha/asyncomplete.vim'
 Plugin 'prabirshrestha/asyncomplete-lsp.vim'
 Plugin 'prabirshrestha/asyncomplete-buffer.vim'
 Plugin 'prabirshrestha/asyncomplete-neosnippet.vim'
+Plugin 'yami-beta/asyncomplete-omni.vim'
 Plugin 'Shougo/neosnippet.vim'
 Plugin 'prabirshrestha/vim-lsp'
 Plugin 'mattn/vim-lsp-settings'
@@ -111,6 +131,11 @@ if !has('nvim')
 endif
 
 Plugin 'Shougo/neosnippet-snippets'
+
+" deno
+Plugin 'vim-denops/denops.vim'
+Plugin 'vim-denops/denops-helloworld.vim'
+
 
 " ctags setting>>>
 " ファイルタイプ毎 & gitリポジトリ毎にtagsの読み込みpathを変える
@@ -180,7 +205,7 @@ nnoremap sub :OverCommandLine<CR>%s/<C-r><C-w>//g<Left><Left>
 
 " Plugin for ROS 
 Plugin 'taketwo/vim-ros'
-let g:ros_make = 'current'
+" let g:ros_make = 'current'
 let g:ros_catkin_make_options = ''
 " rosのディレクトリをPathに追加
 set path+=/opt/ros/melodic/share/**

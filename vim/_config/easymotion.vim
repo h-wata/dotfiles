@@ -1,5 +1,5 @@
 UsePlugin 'vim-easymotion'
-let g:EasyMotion_keys='hjklasdfgyuiopqwertnmzxcvbHJKLASDFGYUIOPQWERTNMZXCVB'
+" ホームポジションに近いキーを使う let g:EasyMotion_keys='hjklasdfgyuiopqwertnmzxcvbHJKLASDFGYUIOPQWERTNMZXCVB'
 " 「'」 + 何かにマッピング
 let g:EasyMotion_leader_key="'"
 " 1 ストローク選択を優先する
@@ -16,13 +16,4 @@ let g:coloresque_whitelist = [
         \   'scss', 'sh', 'stylus', 'svg',
         \   'typescript', 'vim', 'vue', 'xml']
 let g:coloresque_blacklist = []
-
-let g:asyncomplete_completion_delay=200
-let g:asyncomplete_auto_popup=1
-let g:asyncomplete_auto_autocompleteopt=1
-
-autocmd FileType typescript,python setlocal omnifunc=lsp#complete
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
 
