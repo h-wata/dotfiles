@@ -63,7 +63,6 @@ nnoremap <silent><C-e> :NERDTreeFocusToggle<CR>
 " Plugin 'easymotion/vim-easymotion'
 " fzf easymotion
 Plugin 'yuki-yano/fuzzy-motion.vim'
-nmap <Leader>f :FuzzyMotion<CR>
 Plugin 'KabbAmine/vCoolor.vim'
 Plugin 'thinca/vim-quickrun'
 " Plugin 'gko/vim-coloresque'
