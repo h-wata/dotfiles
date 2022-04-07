@@ -40,7 +40,7 @@ function gdiff {
 # rcd - roscd package
 function rcd {
     local package
-    package=$(rospack list-names | fzf ) &&  
+    package=$(rospack list-names | fzf ) &&
     roscd $(echo "$package")
     echo $PWD
 }
@@ -48,26 +48,39 @@ function rcd {
 function red {
     local file
     preview="bat  --color=always --style=header,grid --line-range :100 {-1}"
-    file=$(find $(rospack find $1) -type f -print 2> /dev/null| fzf -m --ansi --prompt "Select edit files by TAB>" --preview "$preview" --height 100%) &&  
+    file=$(find $(rospack find $1) -type f -print 2> /dev/null| fzf -m --ansi --prompt "Select edit files by TAB>" --preview "$preview" --height 100%) &&
     vim "$file"
 }
 function rtopic {
     local topic
     preview="rostopic info {-1}"
-    topic=$(rostopic list| fzf --ansi --prompt "rostopic info >" --preview "$preview" --height 100%) &&  
+    topic=$(rostopic list| fzf --ansi --prompt "rostopic info >" --preview "$preview" --height 100%) &&
     echo $topic &&
     rostopic $* $topic
-}   
+}
 function rnode {
     local node
     preview="rosnode info {-1}"
-    node=$(rosnode list| fzf --ansi --prompt "rosnode info >" --preview "$preview" --height 100%) &&  
+    node=$(rosnode list| fzf --ansi --prompt "rosnode info >" --preview "$preview" --height 100%) &&
     echo $node &&
     rosnode $* $node
-}   
+}
 function rparam {
     preview="rosparam get {-1}"
-    param=$(rosparam list| fzf --ansi --prompt "rosparam get >" --preview "$preview" --height 100%) &&  
+    param=$(rosparam list| fzf --ansi --prompt "rosparam get >" --preview "$preview" --height 100%) &&
     echo $param &&
     rosparam $* $param
-}   
+}
+# fshow - git commit browser
+fshow() {
+  _gitLogLineToHash="echo {} | grep -o '[a-f0-9]\{7\}' | head -1"  
+  _viewGitLogLine="$_gitLogLineToHash | xargs -I % sh -c 'git show --color=always % | diff-so-fancy'"
+  git log --graph --color=always \
+      --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
+  fzf --ansi --no-sort --reverse --preview="$_viewGitLogLine"  --tiebreak=index --bind=ctrl-s:toggle-sort \
+      --bind "ctrl-m:execute:
+                (grep -o '[a-f0-9]\{7\}' | head -1 |
+                xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
+                {}
+FZF-EOF"
+}

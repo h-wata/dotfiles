@@ -72,7 +72,7 @@ let g:coloresque_whitelist = [
         \   'javascript', 'jsx', 'less', 'php',
         \   'postcss', 'pug', 'qml', 'sass',
         \   'scss', 'sh', 'stylus', 'svg',
-        \   'typescript', 'vim', 'vue', 'xml']
+        \   'typescript', 'vim', 'vue', 'xml', 'conf']
 let g:coloresque_blacklist = []
 
 " エディタの分割方向を設定する
@@ -164,7 +164,7 @@ augroup MakeTagsAutoCmd
     autocmd!
     autocmd FileType python nnoremap <leader>M :!make -f /home/gisen/workspace/dotfiles/ctags/Makefile<CR>
 augroup END
-nnoremap <leader>M :!make -f /home/gisen/work/dotfiles/ctags/Makefile<CR>
+nnoremap <leader>M :!make -f /home/gisen/workspace/dotfiles/ctags/Makefile<CR>
 
 augroup TagsAutoCmd
     autocmd!
