@@ -8,10 +8,10 @@ tools:
     lint-command: "yamllint -s -f parsable -"
     lint-stdin: true
   xmllint: &xmllint
-    lint-command: "xmllint --noout --schema $HOME/.config/xmllint/package.format2.xsd --valid -"
+    lint-command: "xmllint --noout --schema $HOME/.config/xmllint/package_format2.xsd --valid -"
     lint-stdin: true
   xmlformat: &xmlformat
-    format-command: "xmllint --format --schema $HOME/.config/xmllint/package.format2.xsd -"
+    format-command: "xmllint --format --schema $HOME/.config/xmllint/package_format2.xsd -"
     format-stdin: true
   roslaunchlint: &roslaunchlint
     lint-command: "xmllint --noout --schema $HOME/.config/xmllint/roslaunch.xsd --valid -"
