@@ -48,13 +48,13 @@ autocmd BufWrite *.md :call HankakuMd()
 " ----For Python editor----
 " add indent line
 Plugin 'Yggdroot/indentLine'
-Plugin 'scrooloose/nerdtree'
-Plugin 'jistr/vim-nerdtree-tabs'
-Plugin 'Xuyuanp/nerdtree-git-plugin'
+" Plugin 'scrooloose/nerdtree'
+" Plugin 'jistr/vim-nerdtree-tabs'
+" Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'airblade/vim-gitgutter'
 " 隠しファイルを表示する
-let NERDTreeShowHidden = 1
-nnoremap <silent><C-e> :NERDTreeFocusToggle<CR>
+" let NERDTreeShowHidden = 1
+" nnoremap <silent><C-e> :NERDTreeFocusToggle<CR>
 " デフォルトでツリーを表示させる
 " let g:nerdtree_tabs_open_on_console_startup=1
 " 他のバッファをすべて閉じた時にNERDTreeが開いていたらNERDTreeも一緒に閉じる。
@@ -433,18 +433,18 @@ endfunction
 autocmd MyAutoCmd BufWritePre * call s:mkdir(expand('<afile>:p:h'), v:cmdbang)
 
 " vim 起動時のみカレントディレクトリを開いたファイルの親ディレクトリに指定
-autocmd MyAutoCmd VimEnter * call s:ChangeCurrentDir('', '')
-function! s:ChangeCurrentDir(directory, bang)
-    if a:directory == ''
-        lcd %:p:h
-    else
-        execute 'lcd' . a:directory
-    endif
-
-    if a:bang == ''
-        pwd
-    endif
-endfunction
+" autocmd MyAutoCmd VimEnter * call s:ChangeCurrentDir('', '')
+" function! s:ChangeCurrentDir(directory, bang)
+"     if a:directory == ''
+"         lcd %:p:h
+"     else
+"         execute 'lcd' . a:directory
+"     endif
+" 
+"     if a:bang == ''
+"         pwd
+"     endif
+" endfunction
 " pasteするときにインデントするのを防ぐ
 if &term =~ "xterm"
     let &t_SI .= "\e[?2004h"
