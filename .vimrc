@@ -114,18 +114,19 @@ vmap <Leader>c <Plug>(caw:hatpos:toggle)
 Plugin 'DoxygenToolkit.vim'
 
 " vim-lsp setting
-Plugin 'SirVer/ultisnips'
+" Plugin 'SirVer/ultisnips'
 Plugin 'prabirshrestha/async.vim'
 Plugin 'prabirshrestha/asyncomplete.vim'
 Plugin 'prabirshrestha/asyncomplete-lsp.vim'
 Plugin 'prabirshrestha/asyncomplete-buffer.vim'
 Plugin 'prabirshrestha/asyncomplete-neosnippet.vim'
+" Plugin 'prabirshrestha/asyncomplete-ultisnips.vim'
 Plugin 'yami-beta/asyncomplete-omni.vim'
 Plugin 'Shougo/neosnippet.vim'
 Plugin 'prabirshrestha/vim-lsp'
 Plugin 'mattn/vim-lsp-settings'
 Plugin 'thomasfaingnaert/vim-lsp-snippets'
-Plugin 'thomasfaingnaert/vim-lsp-ultisnips'
+" Plugin 'thomasfaingnaert/vim-lsp-ultisnips'
 
 " インターフェイス変更
 " airlineが重いのでlightlineを使う

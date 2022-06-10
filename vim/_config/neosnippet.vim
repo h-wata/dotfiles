@@ -23,3 +23,9 @@ smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 if has('conceal')
   set conceallevel=2 concealcursor=niv
 endif
+" need asyncpmlete-neosnippet
+au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#neosnippet#get_source_options({
+  \ 'name': 'neosnippet',
+  \ 'whitelist': ['*'],
+  \ 'completor': function('asyncomplete#sources#neosnippet#completor'),
+  \ }))"

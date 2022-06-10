@@ -51,11 +51,6 @@ command! LspDebug let lsp_log_verbose=1 | let lsp_log_file = expand('~/lsp.log')
 
 set completeopt+=menuone
 " set completeopt+=popup
-au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#neosnippet#get_source_options({
-  \ 'name': 'neosnippet',
-  \ 'whitelist': ['*'],
-  \ 'completor': function('asyncomplete#sources#neosnippet#completor'),
-  \ }))"
 
 au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#omni#get_source_options({
 \ 'name': 'omni',
