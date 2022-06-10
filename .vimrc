@@ -59,9 +59,17 @@ nnoremap <silent><C-e> :NERDTreeFocusToggle<CR>
 " let g:nerdtree_tabs_open_on_console_startup=1
 " 他のバッファをすべて閉じた時にNERDTreeが開いていたらNERDTreeも一緒に閉じる。
 " autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" fern filer
+Plugin 'lambdalisue/fern.vim'
+Plugin 'yuki-yano/fern-preview.vim'
+Plugin 'lambdalisue/fern-git-status.vim'
+Plugin 'lambdalisue/fern-hijack.vim'
+Plugin 'lambdalisue/fern-ssh'
+Plugin 'lambdalisue/nerdfont.vim'
+Plugin 'lambdalisue/fern-renderer-nerdfont.vim'
+Plugin 'lambdalisue/glyph-palette.vim'
+Plugin 'ryanoasis/vim-devicons'
 " カーソル移動
-" Plugin 'easymotion/vim-easymotion'
-" fzf easymotion
 Plugin 'yuki-yano/fuzzy-motion.vim'
 Plugin 'KabbAmine/vCoolor.vim'
 Plugin 'thinca/vim-quickrun'
@@ -145,7 +153,7 @@ if a:type == 'cpp'
         let type = a:type
 endif
     try
-        execute "set tags=".$HOME."/work/dotfiles/tags_files/".
+        execute "set tags=".$HOME."/workspace/dotfiles/tags_files/".
              \ system("cd " . expand('%:p:h') . "; basename `git rev-parse --show-toplevel` | tr -d '\n'").
              \ "/" . type . "_tags"
     catch

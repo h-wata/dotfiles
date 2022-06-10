@@ -30,7 +30,7 @@ ifeq ($(git_toplevel),)
     tags_target_dir = $(realpath $(TARGET_PATH))
 else
     # gitリポジトリ管理である場合
-    tags_save_dir = $(HOME)/work/dotfiles/tags_files/$(shell basename $(git_toplevel))
+    tags_save_dir = $(HOME)/workspace/dotfiles/tags_files/$(shell basename $(git_toplevel))
     tags_target_dir = $(git_toplevel)
 endif
 

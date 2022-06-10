@@ -71,7 +71,8 @@ let g:lsp_signs_enabled = 1         " enable signs
 let g:lsp_diagnostics_enabled = v:true
 let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
 let g:lsp_text_prop_enabled = 1 " 
-let g:lsp_settings_filetype_python = 'pyls-ms'
+" let g:lsp_settings_filetype_python = 'pyls-ms'
+let g:lsp_settings_filetype_python = 'pylsp-all'
 let g:lsp_diagnostics_signs_error = {'text': ''}
 let g:lsp_diagnostics_signs_warning = {'text': ''}
 let g:lsp_diagnostics_signs_hint= {'text': '?'}
@@ -91,4 +92,3 @@ let g:asyncomplete_auto_autocompleteopt=1
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
-
