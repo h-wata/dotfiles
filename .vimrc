@@ -133,12 +133,23 @@ Plugin 'thomasfaingnaert/vim-lsp-snippets'
 Plugin 'itchyny/lightline.vim'
 Plugin 'popkirby/lightline-iceberg'
 Plugin 'Shougo/deoplete.nvim'
-if !has('nvim')
+
+Plugin 'Shougo/neosnippet-snippets'
+if has('nvim')
+  function! UpdateRemotePlugins(...)
+    " Needed to refresh runtime files
+    let &rtp=&rtp
+    UpdateRemotePlugins
+  endfunction
+
+  Plugin 'gelguy/wilder.nvim', { 'do': function('UpdateRemotePlugins') }
+else
+  Plugin 'gelguy/wilder.nvim'
+
+  " To use Python remote plugin features in Vim, can be skipped
   Plugin 'roxma/nvim-yarp'
   Plugin 'roxma/vim-hug-neovim-rpc'
 endif
-
-Plugin 'Shougo/neosnippet-snippets'
 
 " deno
 Plugin 'vim-denops/denops.vim'

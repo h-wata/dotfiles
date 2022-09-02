@@ -1,5 +1,5 @@
 UsePlugin 'fern'
-nnoremap <silent> <C-e> :<C-u>Fern . -drawer -toggle<CR>
+nnoremap <silent> <C-e> :<C-u>Fern %:h -drawer -toggle<CR>
 let g:fern#default_hidden=1
 let g:fern#renderer = 'nerdfont'
 
