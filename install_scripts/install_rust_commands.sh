@@ -19,6 +19,9 @@ add_bashrc() {
     cecho $cyan "'$1' was added to ~/.bashrc"
   fi
 }
-# install fzf
-git clone --depth 1 git@github.com:junegunn/fzf.git ~/.fzf
-~/.fzf/install
+# install bat fd
+sudo apt install -y ripgrep
+wget https://github.com/sharkdp/fd/releases/download/v8.4.0/fd-musl_8.4.0_amd64.deb -P /tmp/
+wget https://github.com/sharkdp/bat/releases/download/v0.22.1/bat-musl_0.22.1_amd64.deb -P /tmp/
+sudo dpkg -i  /tmp/fd-musl_8.4.0_amd64.deb
+sudo dpkg -i  /tmp/bat-musl_0.22.1_amd64.deb
