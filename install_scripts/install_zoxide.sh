@@ -22,4 +22,4 @@ add_bashrc() {
 
 sudo apt install -y curl
 curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
-add_bashrc "eval "$(zoxide init bash --cmd j)""
+add_bashrc "eval \"\$(zoxide init bash --cmd j)\""
