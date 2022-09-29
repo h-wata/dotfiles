@@ -1,0 +1,41 @@
+[user]
+	name = h-wata
+	email = hirofumi01.watanabe@g.softbank.co.jp
+[core]
+  # git commitでvimを表示する
+	editor = vim -c \"set fenc=utf-8\"
+  # git diffで日本語を表示する
+	pager = LESSCHARSET=utf-8 less
+[color]
+	diff = auto
+	status = auto
+	branch = auto
+	ui = true
+[alias]
+	st = status
+	co = checkout
+	br = branch
+	cm = commit
+	df = diff
+	gr = grep
+	graph = log --graph --date-order -C -M --pretty=format:\"<%h> %ad [%an] %Cgreen%d%Creset %s\" --all --date=short
+	lg = log --graph --pretty=format:'%Cred%h%Creset %ad %s %C(yellow)%d%Creset %C(bold blue)<%an>%Creset' --date=short
+    hist = log --graph --full-history --all --pretty=format:'%Cred%h%Creset %ad %s %C(yellow)%d%Creset %C(bold blue)<%an>%Creset' --date=short
+	sw = switch
+    delete-merged-branch = "!f () { git checkout $1; git branch --merged|egrep -v '\\*|develop|main|master'|xargs git branch -d; };f"
+
+[pull]
+	rebase = true
+[commit]
+	template = /home/gisen/Documents/git/.gitmessage.txt
+[fetch]
+	prune = true
+[push]
+	default = simple
+[init]
+	templatedir = ~/.git_template
+	defaultBranch = main
+
+[url "git@github.com:"]
+    InsteadOf = https://github.com/
+    InsteadOf = git@github.com:

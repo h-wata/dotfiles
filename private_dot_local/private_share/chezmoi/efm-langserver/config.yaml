@@ -1,0 +1,105 @@
+version: 2
+log-fle: $HOME/efm_langserver.log
+log-level: 1
+root-markers:
+  - .git/
+tools:
+  yaml-yamllint: &yaml-yamllint
+    lint-command: "yamllint -s -f parsable -"
+    lint-stdin: true
+  xmllint: &xmllint
+    lint-command: "xmllint --noout --schema $HOME/.config/xmllint/package_format2.xsd --valid -"
+    lint-stdin: true
+  xmlformat: &xmlformat
+    format-command: "xmllint --format --schema $HOME/.config/xmllint/package_format2.xsd -"
+    format-stdin: true
+  roslaunchlint: &roslaunchlint
+    lint-command: "xmllint --noout --schema $HOME/.config/xmllint/roslaunch.xsd --valid -"
+    lint-stdin: true
+  roslaunchformat: &roslaunchformat
+    format-command: "xmllint --format --schema $HOME/.config/xmllint/roslaunch.xsd -"
+    format-stdin: true
+  cmakeformat: &cmakeformat
+    format-command: "$HOME/.local/bin/cmake-format -c $HOME/.config/.cmake-format -l error -"
+    format-stdin: true
+
+  python-flake8: &python-flake8
+    lint-command: "flake8 --config $HOME/workspace/.github/setup.cfg --stdin-display-name ${INPUT} -"
+    lint-stdin: true
+    lint-formats:
+      - "%f:%l:%c: %m"
+
+  python-mypy: &python-mypy
+    lint-command: "mypy --show-column-numbers"
+    lint-formats:
+      - "%f:%l:%c: %trror: %m"
+      - "%f:%l:%c: %tarning: %m"
+      - "%f:%l:%c: %tote: %m"
+
+  python-autopep8: &python-autopep8
+    format-command: "autopep8 -"
+    format-stdin: true
+
+  python-isort: &python-isort
+    format-command: "isort -l 119 --sl --quiet -"
+    format-stdin: true
+
+  vim-vint: &vim-vint
+    lint-command: "vint ${INPUT}"
+    lint-stdin: true
+    lint-formats:
+      - "%f:%l:%c: %m"
+  markdown-textlint: &markdown-textlint
+    lint-command: "npx --no-install textlint -f unix --stdin --stdin-filename -"
+    lint-ignore-exit-code: true
+    lint-stdin: true
+    lint-formats:
+      - "%f:%l:%c: %m [%trror/%r]"
+    root-markers:
+      - .textlintrc
+  markdown-markdownlint: &markdown-markdownlint
+    lint-command: "markdownlint -s -c %HOME%/.markdownlintrc"
+    lint-stdin: true
+    lint-formats:
+      - "%f:%l %m"
+      - "%f:%l:%c %m"
+      - "%f: %l: %m"
+
+  sh-shellcheck: &sh-shellcheck
+    lint-command: "shellcheck -f gcc -x"
+    lint-source: "shellcheck"
+    lint-formats:
+      - "%f:%l:%c: %trror: %m"
+      - "%f:%l:%c: %tarning: %m"
+      - "%f:%l:%c: %tote: %m"
+
+  sh-shfmt: &sh-shfmt
+    format-command: "$HOME/go/bin/shfmt -i 2 -ci -s -bn"
+    format-stdin: true
+
+languages:
+  yaml:
+    - <<: *yaml-yamllint
+  xml:
+    - <<: *xmllint
+    - <<: *xmlformat
+  roslaunch.xml:
+    - <<: *roslaunchlint
+    - <<: *roslaunchformat
+  cmake:
+    - <<: *cmakeformat
+  python:
+    - <<: *python-flake8
+    # - <<: *python-mypy
+    - <<: *python-autopep8
+    - <<: *python-isort
+    # - <<: *python-yapf
+    # - <<: *python-black
+  vim:
+    - <<: *vim-vint
+  markdown:
+    - <<: *markdown-textlint
+    - <<: *markdown-markdownlint
+  sh:
+    - <<: *sh-shellcheck
+    - <<: *sh-shfmt
