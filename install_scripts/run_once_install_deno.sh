@@ -22,4 +22,4 @@ add_bashrc() {
 
 sudo apt install -y curl
 curl -fsSL https://deno.land/install.sh | sh
-add_bashrc "export DENO_INSTALL='/home/gisen/.deno'"
+add_bashrc "export DENO_INSTALL='$HOME/deno'"
