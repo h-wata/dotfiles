@@ -1,0 +1,104 @@
+[ytdl-mpv]
+command=$SCRIPT_DIR/ytdl-mpv/ytdl-mpv
+markup=pango
+interval=once
+signal=4
+
+[github]
+command=$SCRIPT_DIR/github/github
+interval=1
+format=json
+markup=pango
+
+[uptime]
+label= 
+command=uptime | sed 's/.*up \([^,]*\),.*/\1/'
+color=#8fa1b3
+interval=60
+
+# Query my default IP address only on startup
+[ip]
+command=hostname -I | awk '{ print "IP:" $1 }'
+interval=5
+color=#91E78B
+
+[nm-vpn]
+command=$SCRIPT_DIR/nm-vpn/nm-vpn
+#init_color=#FFFF00
+#on_color=#00FF00
+label=VPN: 
+interval=5
+
+[bandwidth]
+command=$SCRIPT_DIR/bandwidth2/bandwidth2 
+interval=persist
+markup=pango
+label=
+color=#83A26D
+#INTERFACE=(checks all interfaces)
+
+[disk]
+label=
+command=df -BG / | sed 1d | awk '{print "Used(%):"$5 " Used:"$3 " Free:"$4}'
+color=#B38FA9
+interval=10
+
+[memory]
+label= 
+command=~/.config/i3blocks/memory.py
+#command=free -h | awk 'match($0, /^Mem/){print $3 " / " $2}'
+color=#B38F8F
+interval=1
+
+[cpu_usage2]
+command=$SCRIPT_DIR/cpu_usage2/cpu_usage2
+markup=pango
+interval=persist
+
+[gpu-load]
+command=$SCRIPT_DIR/gpu-load/gpu-load
+label=GPU
+interval=10
+#min_width=GPU 100% 100% 100% 100%
+#GPU_BRAND=NVIDIA // or AMD
+#T_WARN=70
+#T_CRIT=90
+
+[load average]
+label=
+command=echo "$(uptime | sed 's/.*load average: \(.*\)/\1/' | cut -d, -f1)/$(grep 'processor' /proc/cpuinfo | wc -l)"
+color=#B39A8F
+interval=1
+
+[network]
+label= 
+command=[[ -n $(ip link show up dev wlp2s0) ]] && which wpa_cli &> /dev/null && echo "$({ echo 'status'; echo 'quit'; } | wpa_cli -i wlp2s0 | grep '^ssid=' | cut -d= -f2) : $(cat /proc/net/wireless | tail -1 | tr -s ' ' | cut -d' ' -f4 | sed 's/\./dBm/')"
+color=#A7B38F
+interval=1
+
+[lightness]
+label=☀ 
+command=light -G | xargs printf '%.0f%%\n'
+color=#8FB395
+interval=once
+signal=2
+
+[volume]
+# label= 
+# command=~/.config/i3blocks/volume.sh
+command=$SCRIPT_DIR/volume-pulseaudio/volume-pulseaudio
+interval=once
+signal=1
+color=#94C3C9
+
+[date]
+label=
+command=date +'%m/%d(%a) %H:%M:%S'
+color=#8FB3B2
+interval=5
+
+[battery]
+command=~/.config/i3blocks/battery.sh
+format=json
+interval=persist
+
