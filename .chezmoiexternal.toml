@@ -26,3 +26,12 @@
     type = "file"
     url = "https://github.com/skk-dev/dict/raw/master/SKK-JISYO.L"
     refreshPeriod = "168h"
+
+[".local/share/fonts/'Roboto Mono Regular Nerd Font Complete.ttf'"]
+    type = "file"
+    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/RobotoMono/Regular/complete/Roboto%20Mono%20Nerd%20Font%20Complete.ttf"
+    refreshPeriod = "168h"
+[".fzf"]
+    type = "git-repo"
+    url = "https://github.com/junegunn/fzf.git"
+    refreshPeriod = "168h"
