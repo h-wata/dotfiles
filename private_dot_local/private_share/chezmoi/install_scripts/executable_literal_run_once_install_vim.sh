@@ -1,4 +1,4 @@
-#/usr/bin/bash
+#!/bin/bash
 
 # Install dependancies
 sudo apt install -y git build-essential autoconf automake cproto gettext checkinstall
