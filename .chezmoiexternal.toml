@@ -21,3 +21,8 @@
     type = "git-repo"
     url = "https://github.com/lr-tech/rofi-themes-collection"
     refreshPeriod = "168h"
+
+[".config/eskk/SKK-JISYO.L"]
+    type = "file"
+    url = "https://github.com/skk-dev/dict/raw/master/SKK-JISYO.L"
+    refreshPeriod = "168h"
