@@ -1,4 +1,4 @@
-#/usr/bin/bash
+#!/bin/bash
 
 sudo apt-get install -y fonts-font-awesome
 mkdir -p ~/.local/share/fonts

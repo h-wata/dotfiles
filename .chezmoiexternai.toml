@@ -1,0 +1,21 @@
+
+[".vim/bundle/Vundle.vim"]
+    type = "git-repo"
+    url = "https://github.com/VundleVim/Vundle.vim"
+    refreshPeriod = "168h"
+    [".vim/bundle/Vundle.vim".pull]
+        args = ["--ff-only"]
+
+[".tmux/plugins/tpm"]
+    type = "git-repo"
+    url = "https://github.com/tmux-plugins/tpm"
+    refreshPeriod = "168h"
+
+[".local/share/i3blocks-contrib"]
+    type = "git-repo"
+    url = "https://github.com/vivien/i3blocks-contrib"
+    refreshPeriod = "168h"
+[".local/share/rofi-themes-collection"]
+    type = "git-repo"
+    url = "https://github.com/lr-tech/rofi-themes-collection"
+    refreshPeriod = "168h"
