@@ -37,5 +37,5 @@
 	defaultBranch = main
 
 [url "git@github.com:"]
-    InsteadOf = https://github.com/
+    # InsteadOf = https://github.com/
     InsteadOf = git@github.com:
