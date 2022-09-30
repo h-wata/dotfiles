@@ -22,6 +22,3 @@ add_bashrc() {
 add_bashrc "export FZF_DEFAULT_OPTS='--height 40% --reverse --border'"
 add_bashrc "export FZF_CTRL_T_COMMAND='fd -t f --hidden --follow -d 5 -E .git'"
 add_bashrc "export FZF_CTRL_T_OPTS='--preview \"bat  --color=always --style=header,grid --line-range :100 {}\"'"
-
-bash ./dotfilesLink.sh
-bash ./gitconfiglink.sh
