@@ -34,6 +34,19 @@ sudo dpkg -i  /tmp/bat-musl_0.22.1_amd64.deb
 curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
 add_bashrc "eval \"\$(zoxide init bash --cmd j)\""
 
+# install i3 packages
+sudo add-apt-repository ppa:regolith-linux/release
+sudo apt update
+sudo apt install i3-gaps i3brocks rofi compton flameshot
+
+# cp rofi themes
+mkdir -p $HOME/.local/share/rofi/themes
+cp $HOME/.local/share/rofi-themes-collection/themes/rounded-common.rasi $HOME/.local/share/rofi/themes/
+cp $HOME/.local/share/rofi-themes-collection/themes/rounded-nord-dark.rasi $HOME/.local/share/rofi/themes/
+
+# install gh command
+curl https://github.com/cli/cli/releases/download/v2.17.0/gh_2.17.0_linux_amd64.deb
+
 # Install vim dependancies
 sudo apt install -y git build-essential autoconf automake cproto gettext checkinstall
 sudo apt install -y libacl1-dev libgpm-dev libgtk-3-dev libtinfo-dev libxmu-dev libxpm-dev libncurses-dev 
@@ -60,6 +73,6 @@ sudo add-apt-repository -y ppa:longsleep/golang-backports
 sudo apt update
 sudo apt install -y golang-go
 add_bashrc "export GOPATH=\"\$HOME/.go\""
-add_bashrc "export PATH=\"\$PATH:\$GOPATH/bin\""
+add_bashrc "export PATH=\"\$PATH:\$GOPATH/bin:\$DENO_INSTALL/bin\""
 source $HOME/.bashrc
 go install github.com/mattn/efm-langserver@latest

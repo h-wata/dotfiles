@@ -41,7 +41,7 @@ set $white #c0c5ce
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec mate-terminal
+bindsym $mod+Return exec gnome-terminal
 # bindsym $mod+Return exec i3-sensible-terminal -e tmux
 # bindsym $mod+Return exec sh -e tmux
 
@@ -54,6 +54,7 @@ bindsym $mod+Shift+q kill
 bindsym $mod+d exec sh -c "rofi -show"
 bindsym $mod+Shift+Tab exec sh -c "rofi -show window"
 
+bindsym $mod+z exec sh -c "fcitx -r"
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
@@ -212,17 +213,19 @@ bar {
 exec "setxkbmap -layout us"
 # exec "setxkbmap -option 'grp:alt_shift_toggle'"
 exec --no-startup-id fcitx
+exec --no-startup-id pokemon -w
 exec --no-startup-id xrandr --output eDP1 --scale 0.8x0.8
 exec --no-startup-id setxkbmap -option 'ctrl:nocaps,shift:both_capslock_cancel'
 exec --no-startup-id compton -cbm 0.8
-exec --no-startup-id compton -cbm 0.8
+exec --no-startup-id slack
+exec --no-startup-id vmware-view
+exec --no-startup-id google-chrome
+exec --no-startup-id gnome-terminal
 exec --no-startup-id ~/.config/i3/script/monitor_detect.sh
 #interactive flameshot by pressing printscreen
 exec --no-startup-id flameshot
 bindsym Print exec "flameshot gui"
 exec --no-startup-id pulseaudio --start
-exec --no-startup-id "feh --bg-center $HOME/Pictures/wallpaper.JPG"
-exec --no-startup-id compton -cbm 0.75
 # Disable window border
 for_window [class="^.*"] border pixel 1
 # for_window [class="(?i)vlc"] floating enable
@@ -231,6 +234,7 @@ for_window [class="(?i)gimp"] floating enable
 
 # startup
 assign [class="(?i)slack" ] 3
+assign [class="(?i)vmware-view" ] 2
 # Gaps
 gaps inner 9
 gaps outer 3
