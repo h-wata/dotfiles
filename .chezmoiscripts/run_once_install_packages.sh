@@ -10,15 +10,6 @@ cecho() {
     echo -e "\e[${color}m$@\e[m"
 }
 
-add_bashrc() {
-  added=$(grep "$1" ~/.bashrc | wc -l)
-  if [ $added -gt 0 ]; then
-    cecho $yellow "'$1' is already exist in ~/.bashrc"
-  else
-    echo "$1" >> ~/.bashrc
-    cecho $cyan "'$1' was added to ~/.bashrc"
-  fi
-}
 # install package
 sudo apt-get update
 sudo apt-get install -y ccache tmux nodejs python3-pip ripgrep curl fonts-font-awesome
@@ -32,7 +23,6 @@ sudo dpkg -i  /tmp/bat-musl_0.22.1_amd64.deb
 
 # install zoxide
 curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
-add_bashrc "eval \"\$(zoxide init bash --cmd j)\""
 
 # install i3 packages
 sudo add-apt-repository ppa:regolith-linux/release
@@ -63,7 +53,6 @@ sudo checkinstall -y
 
 # Install deno
 curl -fsSL https://deno.land/install.sh | sh
-add_bashrc "export DENO_INSTALL='$HOME/deno'"
 
 # install fzf
 ~/.fzf/install --all --no-zsh --no-fish
@@ -72,7 +61,5 @@ add_bashrc "export DENO_INSTALL='$HOME/deno'"
 sudo add-apt-repository -y ppa:longsleep/golang-backports
 sudo apt update
 sudo apt install -y golang-go
-add_bashrc "export GOPATH=\"\$HOME/.go\""
-add_bashrc "export PATH=\"\$PATH:\$GOPATH/bin:\$DENO_INSTALL/bin\""
 source $HOME/.bashrc
 go install github.com/mattn/efm-langserver@latest

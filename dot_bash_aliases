@@ -1,3 +1,7 @@
+if [ -f ~/.bash_envs ]; then
+    . ~/.bash_envs
+fi
+
 alias nas_mount='sudo mount.cifs //192.168.129.1/Public /mnt/nas_public -o rw,username=admin'
 alias nas2_mount='sudo mount.cifs //192.168.129.2/Public /mnt/robo_nas2 -o rw,username=admin'
 alias cz=chezmoi
