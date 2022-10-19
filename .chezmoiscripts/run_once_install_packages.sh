@@ -27,7 +27,7 @@ curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | 
 # install i3 packages
 sudo add-apt-repository ppa:regolith-linux/release
 sudo apt update
-sudo apt install i3-gaps i3brocks rofi compton flameshot
+sudo apt install i3-gaps rofi compton flameshot
 
 # cp rofi themes
 mkdir -p $HOME/.local/share/rofi/themes
