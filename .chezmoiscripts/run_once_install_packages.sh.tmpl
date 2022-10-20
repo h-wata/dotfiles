@@ -79,9 +79,13 @@ git clone https://github.com/junegunn/fzf.git ~/.fzf
 ~/.fzf/install --all --no-zsh --no-fish
 
 
+{{ if eq .chezmoi.username "gisen" }}
+
 # install go and efm-langserver
 sudo add-apt-repository -y ppa:longsleep/golang-backports
 sudo apt update
 sudo apt install -y golang-go
 source $HOME/.bashrc
 go install github.com/mattn/efm-langserver@latest
+
+{{ end }}
