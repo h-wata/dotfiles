@@ -17,9 +17,10 @@
     type = "git-repo"
     url = "https://github.com/vivien/i3blocks-contrib"
     refreshPeriod = "168h"
-[".local/share/rofi-themes-collection"]
+
+[".local/share/my-template"]
     type = "git-repo"
-    url = "https://github.com/lr-tech/rofi-themes-collection"
+    url = "https://github.com/h-wata/my-template"
     refreshPeriod = "168h"
 
 [".config/eskk/SKK-JISYO.L"]
@@ -31,6 +32,7 @@
     type = "file"
     url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/RobotoMono/Regular/complete/Roboto%20Mono%20Nerd%20Font%20Complete.ttf"
     refreshPeriod = "168h"
+
 [".fzf"]
     type = "git-repo"
     url = "https://github.com/junegunn/fzf.git"
