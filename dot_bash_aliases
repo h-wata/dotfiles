@@ -2,8 +2,6 @@ if [ -f ~/.bash_envs ]; then
     . ~/.bash_envs
 fi
 
-alias nas_mount='sudo mount.cifs //192.168.129.1/Public /mnt/nas_public -o rw,username=admin'
-alias nas2_mount='sudo mount.cifs //192.168.129.2/Public /mnt/robo_nas2 -o rw,username=admin'
 alias cz=chezmoi
 
 function change_ws() {
@@ -55,7 +53,11 @@ function promps {
         *)      TITLEBAR="";;
     esac
     local BASE="\u@\h"
-    PS1="${TITLEBAR}${GREEN}${BASE}${WHITE}:${BLUE}\w${RED}\$(parse_git_branch)${BLUE}\$${WHITE} \n"
+    if [[ -n "$DOCKER_CONTAINER_NAME" ]]; then
+        PS1="🐳 \e[0;34m$DOCKER_CONTAINER_NAME\e[0m \w ${RED}\$(parse_git_branch)${BLUE}\$${WHITE} \n"
+    else
+        PS1="${TITLEBAR}${GREEN}${BASE}${WHITE}:${BLUE}\w${RED}\$(parse_git_branch)${BLUE}\$${WHITE} \n"
+    fi 
 }
 promps
 #----
@@ -69,3 +71,20 @@ ide()
     tmux split-window -h -p 66
     tmux split-window -h -p 50
 }
+function share_history {
+ history -a
+  # tac ~/.bash_history | awk '!a[$0]++' | tac > ~/.bash_history.tmp
+  # [ -f ~/.bash_history.tmp ] &&
+   # cp ~/.bash_history{.tmp,} &&
+ history -c
+ history -r
+}
+function clean_history {
+  history -a
+  tac ~/.bash_history | awk '!a[$0]++' | tac > ~/.bash_history.tmp
+  [ -f ~/.bash_history.tmp ] &&
+    mv ~/.bash_history{.tmp,} &&
+    history -c &&
+    history -r
+}
+PROMPT_COMMAND='share_history'

@@ -97,8 +97,7 @@ command=date +'%m/%d(%a) %H:%M:%S'
 color=#8FB3B2
 interval=5
 
-[battery]
-command=~/.config/i3blocks/battery.sh
-format=json
-interval=persist
-
+# [battery]
+# command=~/.config/i3blocks/battery.sh
+# format=json
+# interval=persist

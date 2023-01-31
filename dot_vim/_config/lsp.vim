@@ -26,7 +26,7 @@ function! s:on_lsp_buffer_enabled() abort
   nmap <buffer> K <plug>(lsp-hover)
   nmap <buffer> K <plug>(lsp-hover)
   inoremap <expr> <cr> pumvisible() ? "\<c-y>\<cr>" : "\<cr>"
-    if &ft =~ 'cmake\|roslaunch.xml\|xml'
+    if &ft =~ 'cmake\|roslaunch.xml\|xml|yaml'
         nmap <buffer> <leader>F :LspDocumentFormatSync --server=efm-langserver<CR>
         xmap <buffer> <leader>F :LspDocumentRangeFormatSync --server=efm-langserver<CR>
     else
