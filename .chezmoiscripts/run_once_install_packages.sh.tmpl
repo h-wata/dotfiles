@@ -37,7 +37,8 @@ curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | 
         sudo tee /etc/apt/sources.list.d/regolith.list
 {{-   end -}}
         sudo apt update
-        sudo apt install i3-gaps rofi compton flameshot
+        sudo apt install i3-gaps
+        sudo apt install rofi compton flameshot
 # install i3blocks
 git clone https://github.com/vivien/i3blocks.git $HOME/.local/share/i3blocks
 cd $HOME/.local/share/i3blocks
@@ -62,14 +63,18 @@ mkdir $HOME/work
 # Install vim dependancies
 sudo apt install -y git build-essential autoconf automake cproto gettext
 sudo apt install -y libacl1-dev libgpm-dev libgtk-3-dev libtinfo-dev libxmu-dev libxpm-dev libncurses-dev 
+{{-   if eq .chezmoi.osRelease.versionID "20.04" -}}
 sudo apt install -y libperl-dev liblua5.2-0 liblua5.2-dev libluajit-5.1-dev lua5.2 luajit python-dev python3-dev ruby-dev
-
+{{-   else -}}
+sudo apt install -y libperl-dev liblua5.2-0 liblua5.2-dev libluajit-5.1-dev lua5.2 luajit libpython3-dev ruby-dev
+{{-   end -}}
 
 git clone https://github.com/vim/vim.git $HOME/work/vim
 cd $HOME/work/vim
 ./configure  --prefix=/usr/local/ --with-features=huge --enable-multibyte --enable-gpm --enable-cscope --enable-perlinterp --enable-python3interp --enable-rubyinterp --enable-luainterp --enable-acl --enable-fontset --enable-xim --enable-terminal --enable-fail-if-missing --with-luajit --with-x
 make -j8
 sudo checkinstall -y
+sudo apt install -y neovim
 # Install deno
 curl -fsSL https://deno.land/install.sh | sh
 
