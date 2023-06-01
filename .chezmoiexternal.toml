@@ -30,5 +30,5 @@
 
 [".local/share/fonts/'Roboto Mono Regular Nerd Font Complete.ttf'"]
     type = "file"
-    url = "https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/RobotoMono/Regular/complete/Roboto%20Mono%20Nerd%20Font%20Complete.ttf"
+    url = "https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/RobotoMono/Regular/RobotoMonoNerdFont-Regular.ttf"
     refreshPeriod = "168h"

@@ -36,9 +36,11 @@ curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | 
         https://regolith-desktop.org/release-ubuntu-jammy-amd64 jammy main" | \
         sudo tee /etc/apt/sources.list.d/regolith.list
 {{-   end -}}
-        sudo apt update
-        sudo apt install i3-gaps
-        sudo apt install rofi compton flameshot
+
+# update
+sudo apt update
+sudo apt install i3-gaps
+sudo apt install rofi compton flameshot
 # install i3blocks
 git clone https://github.com/vivien/i3blocks.git $HOME/.local/share/i3blocks
 cd $HOME/.local/share/i3blocks
