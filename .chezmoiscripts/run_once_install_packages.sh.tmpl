@@ -76,7 +76,7 @@ cd $HOME/work/vim
 ./configure  --prefix=/usr/local/ --with-features=huge --enable-multibyte --enable-gpm --enable-cscope --enable-perlinterp --enable-python3interp --enable-rubyinterp --enable-luainterp --enable-acl --enable-fontset --enable-xim --enable-terminal --enable-fail-if-missing --with-luajit --with-x
 make -j8
 sudo checkinstall -y
-sudo apt install -y neovim
+sudo snap install nvim --classic 
 # Install deno
 curl -fsSL https://deno.land/install.sh | sh
 
@@ -101,4 +101,7 @@ sudo apt install -y golang-go
 source $HOME/.bashrc
 go install github.com/mattn/efm-langserver@latest
 
+sudo apt install -y npm gh gconf2
+sudo npm install -g tree-sitter-cli
+sudo apt install -y network-manager-l2tp-gnome 
 {{ end }}

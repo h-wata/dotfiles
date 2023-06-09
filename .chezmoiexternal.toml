@@ -32,3 +32,8 @@
     type = "file"
     url = "https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/RobotoMono/Regular/RobotoMonoNerdFont-Regular.ttf"
     refreshPeriod = "168h"
+
+[".local/share/fonts/nerd-fonts"]
+    type = "git-rep"
+    url = "https://github.com/ryanoasis/nerd-fonts.git"
+    refreshPeriod = "168h"
