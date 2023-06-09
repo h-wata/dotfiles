@@ -34,6 +34,6 @@
     refreshPeriod = "168h"
 
 [".local/share/fonts/nerd-fonts"]
-    type = "git-rep"
+    type = "git-repo"
     url = "https://github.com/ryanoasis/nerd-fonts.git"
     refreshPeriod = "168h"
