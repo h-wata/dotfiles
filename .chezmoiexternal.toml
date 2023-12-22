@@ -38,3 +38,13 @@
     url = "https://github.com/ryanoasis/nerd-fonts.git"
     clone.args = ["--depth=1"]
     refreshPeriod = "168h"
+    
+[".config/nvim/"]
+    type = "file"
+    url = "https://github.com/AstroNvim/AstroNvim"
+    refreshPeriod = "168h"
+    
+[".config/nvim/lua/user"]
+    type = "file"
+    url = "https://github.com/h-wata/my-astronvim-settings"
+    refreshPeriod = "168h"
