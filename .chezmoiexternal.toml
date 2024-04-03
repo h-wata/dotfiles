@@ -26,11 +26,13 @@
 [".config/eskk/SKK-JISYO.L"]
     type = "file"
     url = "https://github.com/skk-dev/dict/raw/master/SKK-JISYO.L"
+    clone.args = ["--depth=1"]
     refreshPeriod = "168h"
 
 [".local/share/fonts/'Roboto Mono Regular Nerd Font Complete.ttf'"]
     type = "file"
     url = "https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/RobotoMono/Regular/RobotoMonoNerdFont-Regular.ttf"
+    clone.args = ["--depth=1"]
     refreshPeriod = "168h"
 
 [".local/share/fonts/nerd-fonts"]
