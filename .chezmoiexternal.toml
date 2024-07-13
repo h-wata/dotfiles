@@ -43,10 +43,5 @@
     
 [".config/nvim/"]
     type = "file"
-    url = "https://github.com/AstroNvim/AstroNvim"
-    refreshPeriod = "168h"
-    
-[".config/nvim/lua/user"]
-    type = "file"
-    url = "https://github.com/h-wata/my-astronvim-settings"
+    url = "https://github.com/h-wata/astronvim-settings"
     refreshPeriod = "168h"
