@@ -3,7 +3,7 @@
 	email = hirofumi01.watanabe@g.softbank.co.jp
 [core]
   # git commitでvimを表示する
-	editor = vim -c \"set fenc=utf-8\"
+	editor = nvim
   # git diffで日本語を表示する
 	pager = LESSCHARSET=utf-8 less
 [color]
