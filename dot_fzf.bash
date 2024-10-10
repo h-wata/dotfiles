@@ -41,38 +41,24 @@ function gdiff {
     files=$(git diff $* --name-only | fzf -m --ansi --prompt "Select staging files by TAB>" --preview "$preview" --height 100%) &&
     echo "$files" | xargs -i sh -c "git diff $(git rev-parse --show-toplevel)/{}"
 }
-# rcd - roscd package
-function rcd {
-    local package
-    package=$(rospack list-names | fzf ) &&  
-    roscd $(echo "$package")
-    echo $PWD
-}
-# red - rosed
-function red {
-    local file
-    preview="bat  --color=always --style=header,grid --line-range :100 {-1}"
-    file=$(find $(rospack find $1) -type f -print 2> /dev/null| fzf -m --ansi --prompt "Select edit files by TAB>" --preview "$preview" --height 100%) &&  
-    vim "$file"
-}
 function rtopic {
     local topic
-    preview="rostopic info {-1}"
-    topic=$(rostopic list| fzf --ansi --prompt "rostopic info >" --preview "$preview" --height 100%) &&  
+    preview="ros2 topic info {-1} -v"
+    topic=$(ros2 topic list| fzf --ansi --prompt "rostopic info >" --preview "$preview" --height 100%) &&  
     echo $topic &&
-    rostopic $* $topic
+    ros2 topic $* $topic
 }   
 function rnode {
     local node
-    preview="rosnode info {-1}"
-    node=$(rosnode list| fzf --ansi --prompt "rosnode info >" --preview "$preview" --height 100%) &&  
+    preview="ros2 node info {-1}"
+    node=$(ros2 node list| fzf --ansi --prompt "rosnode info >" --preview "$preview" --height 100%) &&  
     echo $node &&
-    rosnode $* $node
+    ros2 node $* $node
 }   
 function rparam {
-    preview="rosparam get {-1}"
-    param=$(rosparam list| fzf --ansi --prompt "rosparam get >" --preview "$preview" --height 100%) &&  
+    preview="ros2 param get {-1}"
+    param=$(ros2 param list| fzf --ansi --prompt "rosparam get >" --preview "$preview" --height 100%) &&  
     echo $param &&
-    rosparam $* $param
+    ros2 param $* $param
 }   
  

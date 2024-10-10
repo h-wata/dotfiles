@@ -6,6 +6,7 @@
 	editor = nvim
   # git diffで日本語を表示する
 	pager = LESSCHARSET=utf-8 less
+	hooksPath = ~/.git_template/hooks
 [color]
 	diff = auto
 	status = auto
@@ -37,5 +38,5 @@
 	defaultBranch = main
 
 [url "git@github.com:"]
-    # InsteadOf = https://github.com/
+    InsteadOf = https://github.com/
     InsteadOf = git@github.com:

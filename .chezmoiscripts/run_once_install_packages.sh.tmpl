@@ -12,8 +12,8 @@ cecho() {
 
 # install package
 sudo apt-get update
-sudo apt-get install -y ccache tmux nodejs python3-pip ripgrep curl fonts-font-awesome checkinstall wget
-sudo npm install -g textlint textlint-rule-preset-ja-technical-writing
+sudo apt-get install -y ccache tmux nodejs python3-pip ripgrep curl fonts-font-awesome checkinstall wget keychain
+sudo npm install -g textlint textlint-rule-preset-ja-technical-writing network-manager-l2tp-gnome 
 python3 -m pip install cpplint
 # install bat fd
 sudo apt install fd-find bat -y
@@ -96,7 +96,6 @@ sudo apt install -y golang-go
 source $HOME/.bashrc
 go install github.com/mattn/efm-langserver@latest
 
-sudo apt install -y npm gh gconf2
+sudo apt install -y npm gconf2
 sudo npm install -g tree-sitter-cli
-sudo apt install -y network-manager-l2tp-gnome 
 {{ end }}
