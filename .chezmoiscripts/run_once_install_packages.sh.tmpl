@@ -12,20 +12,25 @@ cecho() {
 
 # install package
 sudo apt-get update
-sudo apt-get install -y ccache tmux nodejs python3-pip ripgrep curl fonts-font-awesome checkinstall wget keychain
-sudo npm install -g textlint textlint-rule-preset-ja-technical-writing network-manager-l2tp-gnome 
+sudo apt-get install -y ccache tmux nodejs python3-pip ripgrep curl fonts-font-awesome checkinstall wget keychain network-manager-l2tp-gnome 
+sudo npm install -g textlint textlint-rule-preset-ja-technical-writing 
 python3 -m pip install cpplint
 # install bat fd
 sudo apt install fd-find bat -y
 
-# install zoxide
+# install zoxide
 curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
 
 # install gh command
 curl https://github.com/cli/cli/releases/download/v2.17.0/gh_2.17.0_linux_amd64.deb
 
+{{-   if eq .chezmoi.osRelease.versionID "24.04" }}
+        cecho $green "install venv for 24.04"
+        sudo apt update
+        sudo apt install -y python3.12-venv
+{{-   end }}
 
-{{- if eq .chezmoi.username "gisen" -}}
+{{- if eq .chezmoi.username "gisen" }}
 
 # install lazygit
 cd /tmp
@@ -47,11 +52,13 @@ sudo apt install -y neovim
 sudo npm install tree-sitter-cli -g
 
 # install i3 packages
-{{-   if eq .chezmoi.osRelease.versionID "20.04" -}}
+{{-   if eq .chezmoi.osRelease.versionID "20.04" }}
+        cecho $green "install i3-gap for 20.04"
         sudo add-apt-repository ppa:regolith-linux/release
         sudo apt update
         sudo apt install -y i3-gaps
-{{-   else if eq .chezmoi.osRelease.versionID "22.04" -}}
+{{-   else if eq .chezmoi.osRelease.versionID "22.04" }}
+        cecho $green "install i3-gap for 22.04"
         wget -qO - https://regolith-desktop.org/regolith.key | \
         gpg --dearmor | sudo tee /usr/share/keyrings/regolith-archive-keyring.gpg > /dev/null
         echo deb "[arch=amd64 signed-by=/usr/share/keyrings/regolith-archive-keyring.gpg] \
@@ -59,10 +66,11 @@ sudo npm install tree-sitter-cli -g
         sudo tee /etc/apt/sources.list.d/regolith.list
         sudo apt update
         sudo apt install -y i3-gaps
-{{-   else if eq .chezmoi.osRelease.versionID "24.04" -}}
+{{-   else if eq .chezmoi.osRelease.versionID "24.04" }}
+        cecho $green "install i3-wm for 24.04"
         sudo apt update
-        sudo apt install -y i3-wm aconf
-{{-   end -}}
+        sudo apt install -y i3-wm autoconf
+{{-   end }}
 
 sudo apt install -y rofi compton flameshot
 # install i3blocks
@@ -71,7 +79,8 @@ cd $HOME/.local/share/i3blocks
 ./autogen.sh
 ./configure
 make
-sudo checkinstall -y
+sudo checkinstall -D -y --install=no --fstrans=no --pkgname=i3blocks
+sudo dpkg -i i3blocks*.deb
 # cp rofi themes
 git clone https://github.com/lr-tech/rofi-themes-collection $HOME/.local/share/rofi-themes-collection
 mkdir -p $HOME/.local/share/rofi/themes
@@ -96,6 +105,6 @@ sudo apt install -y golang-go
 source $HOME/.bashrc
 go install github.com/mattn/efm-langserver@latest
 
-sudo apt install -y npm gconf2
+sudo apt install -y npm
 sudo npm install -g tree-sitter-cli
 {{ end }}
