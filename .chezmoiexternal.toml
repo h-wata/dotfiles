@@ -1,11 +1,3 @@
-
-[".vim/bundle/Vundle.vim"]
-    type = "git-repo"
-    url = "https://github.com/VundleVim/Vundle.vim"
-    refreshPeriod = "168h"
-    [".vim/bundle/Vundle.vim".pull]
-        args = ["--ff-only"]
-
 [".tmux/plugins/tpm"]
     type = "archive"
     url = "https://github.com/tmux-plugins/tpm/archive/master.tar.gz"
@@ -42,6 +34,6 @@
     refreshPeriod = "168h"
     
 [".config/nvim/"]
-    type = "file"
+    type = "git-repo"
     url = "https://github.com/h-wata/astronvim-settings"
     refreshPeriod = "168h"

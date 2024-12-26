@@ -1,20 +1,20 @@
 # Setup fzf
 # ---------
-if [[ ! "$PATH" == */home/gisen/.fzf/bin* ]]; then
-  PATH="${PATH:+${PATH}:}/home/gisen/.fzf/bin"
+if [[ ! "$PATH" == *$HOME/.fzf/bin* ]]; then
+  PATH="${PATH:+${PATH}:}$HOME/.fzf/bin"
 fi
 
 # Key bindings
 # ------------
-source "/home/gisen/.fzf/shell/key-bindings.bash"
+source "$HOME/.fzf/shell/key-bindings.bash"
 
 # Auto-completion
 # ---------------
-[[ $- == *i* ]] && source "/home/gisen/.fzf/shell/completion.bash" 2> /dev/null
+[[ $- == *i* ]] && source "$HOME/.fzf/shell/completion.bash" 2> /dev/null
 
 # Key bindings
 # ------------
-source "/home/gisen/.fzf/shell/key-bindings.bash"
+source "$HOME/.fzf/shell/key-bindings.bash"
 
 export FZF_DEFAULT_OPTS='--height 40% --reverse --border'
 export FZF_CTRL_T_COMMAND='fd -t f --hidden --follow -d 5 -E .git'
