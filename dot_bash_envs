@@ -2,6 +2,8 @@ export GOPATH="$HOME/.go"
 export DENO_INSTALL='/home/gisen/deno'
 export PATH=$PATH:/home/gisen/.local/bin:$DENO_INSTALL/bin:$GOPATH/bin
 export PATH="/usr/local/cuda/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
+export LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH"
 export LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH"
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 export FZF_DEFAULT_OPTS='--height 40% --reverse --border'
@@ -12,5 +14,21 @@ source /opt/ros/jazzy/setup.bash
 source ~/ros/install/setup.bash
 export EDITOR=nvim
 bind -f ~/.inputrc
-export __NV_PRIME_RENDER_OFFLOAD=1
-export __GLX_VENDOR_LIBRARY_NAME=nvidia
+# export __NV_PRIME_RENDER_OFFLOAD=1
+# export __GLX_VENDOR_LIBRARY_NAME=nvidia
+export RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+# export CYCLONEDDS_URI=file:///home/gisen/cyclonedds.xml
+
+# history 共有
+# 1) ファイル追記モード
+shopt -s histappend
+
+# 2) 重複を消し、行数を確保
+export HISTCONTROL=ignoredups:erasedups
+export HISTSIZE=100000
+export HISTFILESIZE=200000 
+
+# 3) 各プロンプト表示時に即時書き込み＆読み込み
+#    history -a : 履歴ファイルへ“追加書き込み”
+#    history -n : ファイルの“未読分”を取り込み
+export PROMPT_COMMAND="history -a; history -n; $PROMPT_COMMAND"

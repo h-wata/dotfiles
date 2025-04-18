@@ -71,20 +71,3 @@ ide()
     tmux split-window -h -p 66
     tmux split-window -h -p 50
 }
-function share_history {
- history -a
-  # tac ~/.bash_history | awk '!a[$0]++' | tac > ~/.bash_history.tmp
-  # [ -f ~/.bash_history.tmp ] &&
-   # cp ~/.bash_history{.tmp,} &&
- history -c
- history -r
-}
-function clean_history {
-  history -a
-  tac ~/.bash_history | awk '!a[$0]++' | tac > ~/.bash_history.tmp
-  [ -f ~/.bash_history.tmp ] &&
-    mv ~/.bash_history{.tmp,} &&
-    history -c &&
-    history -r
-}
-PROMPT_COMMAND='share_history'
