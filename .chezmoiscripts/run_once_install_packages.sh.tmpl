@@ -42,8 +42,14 @@ tar xf lazygit.tar.gz lazygit
 sudo install lazygit /usr/local/bin
 
 # install Node.js
-curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-sudo apt install -y nodejs
+{{-   if eq .chezmoi.osRelease.versionID "24.04" }}
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
+        \. "$HOME/.nvm/nvm.sh"
+        nvm install 22
+{{- else }}
+        curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+        sudo apt install -y nodejs npm
+{{-   end }}
 
 # install nvim
 sudo snap install nvim --classic
@@ -102,9 +108,6 @@ sudo add-apt-repository -y ppa:longsleep/golang-backports
 sudo apt update
 sudo apt install -y golang-go
 source $HOME/.bashrc
-go install github.com/mattn/efm-langserver@latest
 
-sudo apt install -y npm
-sudo npm install -g tree-sitter-cli
 sudo npm install -g textlint textlint-rule-preset-ja-technical-writing 
 {{ end }}
