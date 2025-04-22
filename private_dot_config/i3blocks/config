@@ -6,7 +6,7 @@ signal=4
 
 [github]
 command=$SCRIPT_DIR/github/github
-interval=1
+interval=15
 format=json
 markup=pango
 
@@ -83,10 +83,10 @@ color=#8FB395
 interval=once
 signal=2
 
-[volume]
+[volume-pipewire]
 # label= 
 # command=~/.config/i3blocks/volume.sh
-command=$SCRIPT_DIR/volume-pulseaudio/volume-pulseaudio
+command=$SCRIPT_DIR/volume-pipewire/volume-pipewire
 interval=once
 signal=1
 color=#94C3C9

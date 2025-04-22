@@ -226,7 +226,7 @@ exec --no-startup-id slack
 exec --no-startup-id vmware-view
 exec --no-startup-id google-chrome-stable
 exec --no-startup-id gnome-terminal
-exec --no-startup-id ~/.config/i3/script/monitor_detect.sh
+exec --no-startup-id weylus --no-gui --try-nvenc --auto-start 
 #interactive flameshot by pressing printscreen
 exec --no-startup-id flameshot
 bindsym Print exec "flameshot gui"
