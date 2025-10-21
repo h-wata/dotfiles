@@ -1,0 +1,75 @@
+{
+  "git.autofetch": true,
+  "roo-cline.allowedCommands": [
+    "npm test",
+    "npm install",
+    "tsc",
+    "git log",
+    "git diff",
+    "git show"
+  ],
+  "github.copilot.nextEditSuggestions.enabled": true,
+
+  // Vim settings
+  "vim.easymotion": true,
+  "vim.incsearch": true,
+  "vim.useSystemClipboard": true,
+  "vim.useCtrlKeys": true,
+  "vim.hlsearch": true,
+  "vim.insertModeKeyBindings": [
+    {
+      "before": ["j", "k"],
+      "after": ["<Esc>"]
+    }
+  ],
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": ["<leader>", "d"],
+      "after": ["d", "d"]
+    },
+    {
+      "before": ["<leader>", "w"],
+      "after": [":w", "<CR>"]
+    },
+    {
+      "before": ["<C-n>"],
+      "commands": [":nohl"]
+    },
+    {
+      "before": ["K"],
+      "commands": ["lineBreakInsert"],
+      "silent": true
+    }
+  ],
+  "vim.leader": "<space>",
+  "vim.handleKeys": {
+    "<C-a>": false,
+    "<C-f>": false
+  },
+  // To improve performance
+  "extensions.experimental.affinity": {
+    "vscodevim.vim": 1
+  },
+
+  // Python formatting settings (global)
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.ruff": "explicit",
+      "source.organizeImports.ruff": "explicit"
+    }
+  },
+
+  // Ruff settings
+  "ruff.configurationPreference": "filesystemFirst",
+  "ruff.lint.args": ["--config=/home/gisen/work/.github/pyproject.toml"],
+  "ruff.format.args": ["--config=/home/gisen/work/.github/pyproject.toml"],
+
+  // YAPF settings (for manual formatting if needed)
+  "python.formatting.provider": "none",
+  "python.formatting.yapfArgs": ["--style=/home/gisen/work/.github/pyproject.toml"],
+
+  // Line length ruler
+  "editor.rulers": [119]
+}
