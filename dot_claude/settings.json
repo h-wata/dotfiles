@@ -1,0 +1,50 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path | select(endswith(\".py\"))' | xargs -r /home/gisen/.local/bin/ruff format --config /home/gisen/work/.github/pyproject.toml"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "notify-send \"Claude Code: $(basename \"$PWD\")\" \"✅ Task completed\\n$(pwd)\"; paplay /usr/share/sounds/freedesktop/stereo/message.oga; sleep 0.05; paplay /usr/share/sounds/freedesktop/stereo/complete.oga"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "permission_prompt",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "notify-send \"Claude Code: $(basename \"$PWD\")\" \"✏️ Permission needed\\n$(pwd)\" -u critical; paplay /usr/share/sounds/freedesktop/stereo/dialog-warning.oga; sleep 0.05; paplay /usr/share/sounds/freedesktop/stereo/dialog-warning.oga"
+          }
+        ]
+      },
+      {
+        "matcher": "idle_prompt",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "notify-send \"Claude Code: $(basename \"$PWD\")\" \"✏️ Input needed\\n$(pwd)\";paplay /usr/share/sounds/freedesktop/stereo/dialog-information.oga; sleep 0.05; paplay /usr/share/sounds/freedesktop/stereo/dialog-information.oga"
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "claude-mem@thedotmack": true,
+    "clangd-lsp@claude-plugins-official": true
+  }
+}

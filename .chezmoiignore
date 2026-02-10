@@ -1,0 +1,16 @@
+# Claude Code - exclude cache and session data
+.claude/cache/
+.claude/paste-cache/
+.claude/plans/
+.claude/projects/
+.claude/session-env/
+.claude/file-history/
+.claude/debug/
+.claude/history.jsonl
+.claude/.credentials.json
+.claude/stats-cache.json
+.claude/plugins/cache/
+.claude/plugins/install-counts-cache.json
+.claude/plugins/marketplaces/
+.claude/.git/
+.claude/plugins/
