@@ -1,2 +1,12 @@
 bundle
 tags_files
+
+# Claude Code runtime/cache data
+dot_claude/todos/
+dot_claude/shell-snapshots/
+dot_claude/tasks/
+dot_claude/statsig/
+dot_claude/telemetry/
+dot_claude/usage-data/
+dot_claude/config/.keep
+dot_claude/ide/.keep
