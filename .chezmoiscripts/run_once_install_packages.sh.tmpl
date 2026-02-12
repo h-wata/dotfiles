@@ -13,19 +13,53 @@ cecho() {
 # install package
 sudo apt-get update
 sudo apt-get install -y ccache tmux nodejs python3-pip bat fd-find ripgrep curl xsel fonts-font-awesome checkinstall wget keychain network-manager-l2tp-gnome fcitx5 fcitx5-mozc 
-python3 -m pip install cpplint alacritty
+python3 -m pip install cpplint
+
+# install alacritty
+if ! command -v alacritty &> /dev/null; then
+    cecho $cyan "Installing alacritty..."
+{{-   if eq .chezmoi.osRelease.versionID "24.04" }}
+    sudo apt install -y alacritty
+{{-   else }}
+    sudo add-apt-repository -y ppa:aslatter/ppa
+    sudo apt update
+    sudo apt install -y alacritty
+{{-   end }}
+else
+    cecho $green "alacritty is already installed"
+fi
 
 # install bat fd
 mkdir -p ~/.local/bin
-ln -s /usr/bin/batcat ~/.local/bin/bat
-ln -s $(which fdfind) ~/.local/bin/fd
+ln -sf /usr/bin/batcat ~/.local/bin/bat
+ln -sf $(which fdfind) ~/.local/bin/fd
 
 # install zoxide
-curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
-echo 'eval "$(zoxide init bash --cmd j)"' >> ~/.bashrc
+if ! command -v zoxide &> /dev/null; then
+    cecho $cyan "Installing zoxide..."
+    curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
+    grep -q 'zoxide init bash' ~/.bashrc || echo 'eval "$(zoxide init bash --cmd j)"' >> ~/.bashrc
+else
+    cecho $green "zoxide is already installed"
+fi
 
 # install gh command
-curl https://github.com/cli/cli/releases/download/v2.17.0/gh_2.17.0_linux_amd64.deb
+if ! command -v gh &> /dev/null; then
+    cecho $cyan "Installing gh command..."
+{{-   if eq .chezmoi.osRelease.versionID "24.04" }}
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+    sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+    sudo apt update
+    sudo apt install -y gh
+{{-   else }}
+    cd /tmp
+    curl -LO https://github.com/cli/cli/releases/download/v2.17.0/gh_2.17.0_linux_amd64.deb
+    sudo dpkg -i gh_2.17.0_linux_amd64.deb
+{{-   end }}
+else
+    cecho $green "gh command is already installed"
+fi
 
 {{-   if eq .chezmoi.osRelease.versionID "24.04" }}
         cecho $green "install venv for 24.04"
@@ -35,24 +69,46 @@ curl https://github.com/cli/cli/releases/download/v2.17.0/gh_2.17.0_linux_amd64.
 {{- if eq .chezmoi.username "gisen" }}
 
 # install lazygit
-cd /tmp
-LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
-curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
-tar xf lazygit.tar.gz lazygit
-sudo install lazygit /usr/local/bin
+if ! command -v lazygit &> /dev/null; then
+    cecho $cyan "Installing lazygit..."
+    cd /tmp
+    LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
+    curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+    tar xf lazygit.tar.gz lazygit
+    sudo install lazygit /usr/local/bin
+else
+    cecho $green "lazygit is already installed"
+fi
 
 # install Node.js
 {{-   if eq .chezmoi.osRelease.versionID "24.04" }}
+if ! command -v node &> /dev/null; then
+    cecho $cyan "Installing nvm and Node.js..."
+    if [ ! -d "$HOME/.nvm" ]; then
         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
-        \. "$HOME/.nvm/nvm.sh"
-        nvm install 22
+    fi
+    \. "$HOME/.nvm/nvm.sh"
+    nvm install 22
+else
+    cecho $green "Node.js is already installed"
+fi
 {{- else }}
-        curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-        sudo apt install -y nodejs npm
+if ! command -v node &> /dev/null; then
+    cecho $cyan "Installing Node.js..."
+    curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+    sudo apt install -y nodejs npm
+else
+    cecho $green "Node.js is already installed"
+fi
 {{-   end }}
 
 # install nvim
-sudo snap install nvim --classic
+if ! command -v nvim &> /dev/null; then
+    cecho $cyan "Installing nvim..."
+    sudo snap install nvim --classic
+else
+    cecho $green "nvim is already installed"
+fi
 
 # install tree-sitter
 sudo npm install tree-sitter-cli -g
@@ -79,35 +135,59 @@ sudo npm install tree-sitter-cli -g
 
 sudo apt install -y rofi compton flameshot
 # install i3blocks
-git clone https://github.com/vivien/i3blocks.git $HOME/.local/share/i3blocks
-cd $HOME/.local/share/i3blocks
-./autogen.sh
-./configure
-make
-sudo checkinstall -D -y --install=no --fstrans=no --pkgname=i3blocks
-sudo dpkg -i i3blocks*.deb
+{{-   if eq .chezmoi.osRelease.versionID "24.04" }}
+        sudo apt install -y i3blocks
+{{-   else }}
+if [ ! -d "$HOME/.local/share/i3blocks" ]; then
+    cecho $cyan "Installing i3blocks from source..."
+    git clone https://github.com/vivien/i3blocks.git $HOME/.local/share/i3blocks
+    cd $HOME/.local/share/i3blocks
+    ./autogen.sh
+    ./configure
+    make
+    sudo checkinstall -D -y --install=no --fstrans=no --pkgname=i3blocks
+    sudo dpkg -i i3blocks*.deb
+else
+    cecho $green "i3blocks source directory already exists"
+fi
+{{-   end }}
 # cp rofi themes
-git clone https://github.com/lr-tech/rofi-themes-collection $HOME/.local/share/rofi-themes-collection
+if [ ! -d "$HOME/.local/share/rofi-themes-collection" ]; then
+    cecho $cyan "Cloning rofi-themes-collection..."
+    git clone https://github.com/lr-tech/rofi-themes-collection $HOME/.local/share/rofi-themes-collection
+else
+    cecho $green "rofi-themes-collection already exists"
+fi
 mkdir -p $HOME/.local/share/rofi/themes
 cp $HOME/.local/share/rofi-themes-collection/themes/rounded-common.rasi $HOME/.local/share/rofi/themes/
 cp $HOME/.local/share/rofi-themes-collection/themes/rounded-nord-dark.rasi $HOME/.local/share/rofi/themes/
 {{- end }}
 
-mkdir $HOME/work
+mkdir -p $HOME/work
 
 
 # install fzf
-git clone https://github.com/junegunn/fzf.git ~/.fzf
-~/.fzf/install --all --no-zsh --no-fish
+if [ ! -d "$HOME/.fzf" ]; then
+    cecho $cyan "Cloning and installing fzf..."
+    git clone https://github.com/junegunn/fzf.git ~/.fzf
+    ~/.fzf/install --all --no-zsh --no-fish
+else
+    cecho $green "fzf already exists"
+fi
 
 
 {{ if eq .chezmoi.username "gisen" }}
 
 # install go and efm-langserver
-sudo add-apt-repository -y ppa:longsleep/golang-backports
-sudo apt update
-sudo apt install -y golang-go
-source $HOME/.bashrc
+if ! command -v go &> /dev/null; then
+    cecho $cyan "Installing Go..."
+    sudo add-apt-repository -y ppa:longsleep/golang-backports
+    sudo apt update
+    sudo apt install -y golang-go
+    source $HOME/.bashrc
+else
+    cecho $green "Go is already installed"
+fi
 
 sudo npm install -g textlint textlint-rule-preset-ja-technical-writing 
 {{ end }}
