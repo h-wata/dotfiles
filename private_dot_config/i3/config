@@ -227,7 +227,7 @@ exec --no-startup-id fcitx
 exec --no-startup-id pokemon -w
 exec --no-startup-id xrandr --output eDP1 --scale 0.8x0.8
 exec --no-startup-id setxkbmap -option 'ctrl:nocaps,shift:both_capslock_cancel'
-exec --no-startup-id compton -cbm 0.8
+exec --no-startup-id compton -cbm 0.8 --backend xrender
 exec --no-startup-id slack
 exec --no-startup-id vmware-view
 exec --no-startup-id google-chrome-stable

@@ -1,8 +1,11 @@
-[ytdl-mpv]
-command=$SCRIPT_DIR/ytdl-mpv/ytdl-mpv
-markup=pango
-interval=once
-signal=4
+[voice_status]
+command=~/.config/i3blocks/voice_status_block.sh
+interval=1
+
+[claude_usage]
+command=~/.config/i3blocks/claude_usage.py
+color=#8fb3b2
+interval=60
 
 [github]
 command=$SCRIPT_DIR/github/github
