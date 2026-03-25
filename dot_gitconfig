@@ -27,8 +27,6 @@
 
 [pull]
 	rebase = true
-[commit]
-	template = /home/gisen/Documents/git/.gitmessage.txt
 [fetch]
 	prune = true
 [push]
